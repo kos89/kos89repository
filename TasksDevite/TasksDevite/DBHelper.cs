@@ -7,6 +7,27 @@ using System.Data.SqlClient;
 
 namespace DBHelper
 {
+    public class DBDevite
+    {
+        public static SqlConnection DBOpen()
+        {
+            SqlConnectionStringBuilder connect = new SqlConnectionStringBuilder();
+            connect.InitialCatalog = "test";
+            connect.DataSource = @"(local)\SQLEXPRESS";
+            connect.ConnectTimeout = 30;
+            connect.IntegratedSecurity = true;
+            SqlConnection cn = new SqlConnection();
+            cn.ConnectionString = connect.ConnectionString;
+            cn.Open();
+            return cn;
+        }
+
+        public static void DBClose(SqlConnection cn)
+        {
+            cn.Close();
+        }
+    }
+
     public class UsersDAL
     {
         public static void InsertUser(int id, string name, SqlConnection cn)
