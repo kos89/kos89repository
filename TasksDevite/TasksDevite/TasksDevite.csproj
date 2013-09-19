@@ -63,26 +63,44 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DBHelper.cs" />
-    <Compile Include="Entres.cs">
+    <Compile Include="Forms\ClientAddForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Entres.Designer.cs">
+    <Compile Include="Forms\ClientAddForm.Designer.cs">
+      <DependentUpon>ClientAddForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ClientsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ClientsForm.Designer.cs">
+      <DependentUpon>ClientsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DBHelper.cs" />
+    <Compile Include="Forms\Entres.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Entres.Designer.cs">
       <DependentUpon>Entres.cs</DependentUpon>
     </Compile>
     <Compile Include="GlobalVar.cs" />
-    <Compile Include="MainForm.cs">
+    <Compile Include="Forms\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainForm.Designer.cs">
+    <Compile Include="Forms\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Entres.resx">
+    <EmbeddedResource Include="Forms\ClientAddForm.resx">
+      <DependentUpon>ClientAddForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ClientsForm.resx">
+      <DependentUpon>ClientsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Entres.resx">
       <DependentUpon>Entres.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MainForm.resx">
+    <EmbeddedResource Include="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">

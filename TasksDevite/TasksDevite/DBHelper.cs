@@ -13,7 +13,8 @@ namespace DBHelper
         {
             SqlConnectionStringBuilder connect = new SqlConnectionStringBuilder();
             connect.InitialCatalog = "test";
-            connect.DataSource = @"(local)\SQLEXPRESS";
+            connect.DataSource = @"(local)";
+            connect.AttachDBFilename = @"C:\Program Files\Microsoft SQL Server\MSSQL10.SQLEXPRESS\MSSQL\DATA\test.mdf";
             connect.ConnectTimeout = 30;
             connect.IntegratedSecurity = true;
             SqlConnection cn = new SqlConnection();
@@ -81,7 +82,7 @@ namespace DBHelper
 
     public class ClientDAL
     {
-        public static void InsertClient(int id, string name, string adress, string phone, string dateStart, bool status, SqlConnection cn)
+        public static void InsertClient(int id, string name, string adress, string phone, DateTime dateStart, bool status, SqlConnection cn)
         {
             string sql = string.Format("Insert Into Clients (ID, Name, Adress, Phone, DateStart, Status)" +
                 "Values('{0}','{1}','{2}','{3}','{4}','{5}')", id, name, adress, phone, dateStart, status);
@@ -128,6 +129,24 @@ namespace DBHelper
             }
         }
 
+        public static int GetID()
+        {
+            SqlConnection cn = new SqlConnection();
+            cn = DBDevite.DBOpen();
+            using (SqlCommand cmd = new SqlCommand("select count(*) from Clients", cn))
+            {
+                try
+                {
+                    SqlDataReader dr = cmd.ExecuteReader();
+                    return Convert.ToInt32(dr["count"]);
+                }
+                catch (SqlException ex)
+                {
+                    Exception error = new Exception("Ошибка с доступом к таблице Clients", ex);
+                    throw error;
+                }
+            }
+        }
         public static void DeleteClient(int id, SqlConnection cn)
         {
             string sql = string.Format("Delete from Client where ID = '{0}'", id);

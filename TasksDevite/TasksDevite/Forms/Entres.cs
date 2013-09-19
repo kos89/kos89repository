@@ -12,9 +12,9 @@ using GlobalVars;
 
 namespace TasksDevite
 {
-    public partial class Entres : Form
+    public partial class EntresForm : Form
     {
-        public Entres()
+        public EntresForm()
         {
             InitializeComponent();
         }

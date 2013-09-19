@@ -70,12 +70,17 @@ namespace TasksDevite
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            Entres ent = new Entres();
-            if (ent.ShowDialog() == DialogResult.OK)
-                ent.Close();
+            EntresForm entForm = new EntresForm();
+            if (entForm.ShowDialog() == DialogResult.OK)
+                entForm.Close();
             else
                 Application.Exit();
-            
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            ClientsForm clForm = new ClientsForm();
+            clForm.ShowDialog();
         }
     }
 }

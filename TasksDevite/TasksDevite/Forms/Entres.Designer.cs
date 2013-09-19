@@ -1,6 +1,6 @@
 ﻿namespace TasksDevite
 {
-    partial class Entres
+    partial class EntresForm
     {
         /// <summary>
         /// Required designer variable.
@@ -61,7 +61,7 @@
             this.labelUser.TabIndex = 2;
             this.labelUser.Text = "Пользователь:";
             // 
-            // Entres
+            // EntresForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -70,7 +70,7 @@
             this.Controls.Add(this.buttonOk);
             this.Controls.Add(this.comboBoxUser);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.Name = "Entres";
+            this.Name = "EntresForm";
             this.Text = "Entres";
             this.Load += new System.EventHandler(this.Entres_Load);
             this.ResumeLayout(false);
