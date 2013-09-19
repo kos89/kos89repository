@@ -13,8 +13,9 @@ namespace DBHelper
         {
             SqlConnectionStringBuilder connect = new SqlConnectionStringBuilder();
             connect.InitialCatalog = "test";
-            connect.DataSource = @"(local)";
-            connect.AttachDBFilename = @"C:\Program Files\Microsoft SQL Server\MSSQL10.SQLEXPRESS\MSSQL\DATA\test.mdf";
+            connect.DataSource = @"(local)\SQLEXPRESS";
+            //connect.DataSource = @"(local)";
+            //connect.AttachDBFilename = @"C:\Program Files\Microsoft SQL Server\MSSQL10.SQLEXPRESS\MSSQL\DATA\test.mdf";
             connect.ConnectTimeout = 30;
             connect.IntegratedSecurity = true;
             SqlConnection cn = new SqlConnection();
@@ -84,7 +85,7 @@ namespace DBHelper
     {
         public static void InsertClient(int id, string name, string adress, string phone, DateTime dateStart, bool status, SqlConnection cn)
         {
-            string sql = string.Format("Insert Into Clients (ID, Name, Adress, Phone, DateStart, Status)" +
+            string sql = string.Format("Insert Into Clients (ID, Name, Adress, Phone, DateStart, ClientStatus)" +
                 "Values('{0}','{1}','{2}','{3}','{4}','{5}')", id, name, adress, phone, dateStart, status);
 
             using (SqlCommand cmd = new SqlCommand(sql, cn))
@@ -129,21 +130,24 @@ namespace DBHelper
             }
         }
 
-        public static int GetID()
+        public static int GetID(SqlConnection cn)
         {
-            SqlConnection cn = new SqlConnection();
-            cn = DBDevite.DBOpen();
             using (SqlCommand cmd = new SqlCommand("select count(*) from Clients", cn))
             {
+                SqlDataReader dr = cmd.ExecuteReader();
                 try
                 {
-                    SqlDataReader dr = cmd.ExecuteReader();
-                    return Convert.ToInt32(dr["count"]);
+                    dr.Read();
+                    return Convert.ToInt32(dr[0])+1;
                 }
                 catch (SqlException ex)
                 {
                     Exception error = new Exception("Ошибка с доступом к таблице Clients", ex);
                     throw error;
+                }
+                finally
+                {
+                    dr.Close();
                 }
             }
         }

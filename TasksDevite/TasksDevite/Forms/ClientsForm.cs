@@ -14,6 +14,7 @@ namespace TasksDevite
 {
     public partial class ClientsForm : Form
     {
+        SqlDataAdapter da;
         public ClientsForm()
         {
             InitializeComponent();
@@ -26,7 +27,7 @@ namespace TasksDevite
             {
                 cn = DBDevite.DBOpen();
 
-                SqlDataAdapter da = new SqlDataAdapter("select ID,Name as Название,Phone as Телефон,Adress as Адрес,DateStart as Дата_начала_договора,ClientStatus as Статус from clients", cn);
+                da = new SqlDataAdapter("select ID,Name as Название,Phone as Телефон,Adress as Адрес,DateStart as Дата_начала_договора,ClientStatus as Статус from clients", cn);
                 SqlCommandBuilder cb = new SqlCommandBuilder(da);
                 DataSet ds = new DataSet();
                 da.Fill(ds);
@@ -48,13 +49,14 @@ namespace TasksDevite
             if (claForm.ShowDialog() == DialogResult.OK)
             {
                 bool status;
-                status = claForm.StatusComboBox.Text == "Да";     
-                //MessageBox.Show(claForm.DateStartTimePicker.Value.Date.ToString());
-                //MessageBox.Show(claForm.StatusComboBox.SelectedItem.ToString());
+                status = claForm.StatusComboBox.Text == "Да";
+                
                 SqlConnection cn = new SqlConnection();
                 cn = DBDevite.DBOpen();
-                ClientDAL.InsertClient(ClientDAL.GetID(), claForm.NameTextBox.Text, claForm.AdressTextBox.Text, claForm.PhoneTextBox.Text,
+                ClientDAL.InsertClient(ClientDAL.GetID(cn), claForm.NameTextBox.Text, claForm.AdressTextBox.Text, claForm.PhoneTextBox.Text,
                     claForm.DateStartTimePicker.Value.Date, status, cn);
+                DBDevite.DBClose(cn);
+                
             }
         }
 
