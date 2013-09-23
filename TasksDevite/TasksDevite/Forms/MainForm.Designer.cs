@@ -99,7 +99,7 @@
             // sdToolStripMenuItem
             // 
             this.sdToolStripMenuItem.Name = "sdToolStripMenuItem";
-            this.sdToolStripMenuItem.Size = new System.Drawing.Size(86, 22);
+            this.sdToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.sdToolStripMenuItem.Text = "sd";
             // 
             // button2
@@ -120,6 +120,7 @@
             this.button3.TabIndex = 5;
             this.button3.Text = "Задания";
             this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // MainForm
             // 
@@ -132,6 +133,7 @@
             this.Controls.Add(this.button1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.menuStrip1.ResumeLayout(false);

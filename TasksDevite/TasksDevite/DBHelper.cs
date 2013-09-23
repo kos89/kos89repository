@@ -85,8 +85,8 @@ namespace DBHelper
     {
         public static void InsertClient(int id, string name, string adress, string phone, DateTime dateStart, bool status, SqlConnection cn)
         {
-            string sql = string.Format("Insert Into Clients (ID, Name, Adress, Phone, DateStart, ClientStatus)" +
-                "Values('{0}','{1}','{2}','{3}','{4}','{5}')", id, name, adress, phone, dateStart, status);
+            string sql = ("Insert Into Clients (ID, Name, Adress, Phone, DateStart, ClientStatus)" +
+                "Values(@ID, @Name, @Adress, @Phone, @DateStart, @ClientStatus)");
 
             using (SqlCommand cmd = new SqlCommand(sql, cn))
             {
@@ -121,7 +121,53 @@ namespace DBHelper
                 cmd.Parameters.Add(param);
 
                 param = new SqlParameter();
-                param.ParameterName = "@Status";
+                param.ParameterName = "@ClientStatus";
+                param.Value = status;
+                param.SqlDbType = SqlDbType.Bit;
+                cmd.Parameters.Add(param);
+
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public static void UpdateClient(int id, string name, string adress, string phone, DateTime dateStart, bool status, SqlConnection cn)
+        {
+            string sql = ("Update Clients Set Name = @Name, Adress = @Adress, Phone = @Phone, DateStart = @DateStart, ClientStatus = @ClientStatus Where ID = @ID");
+
+            using (SqlCommand cmd = new SqlCommand(sql, cn))
+            {
+                SqlParameter param = new SqlParameter();
+                param.ParameterName = "@ID";
+                param.Value = id;
+                param.SqlDbType = SqlDbType.Int;
+                cmd.Parameters.Add(param);
+
+                param = new SqlParameter();
+                param.ParameterName = "@Name";
+                param.Value = name;
+                param.SqlDbType = SqlDbType.Char;
+                cmd.Parameters.Add(param);
+
+                param = new SqlParameter();
+                param.ParameterName = "@Adress";
+                param.Value = adress;
+                param.SqlDbType = SqlDbType.Char;
+                cmd.Parameters.Add(param);
+
+                param = new SqlParameter();
+                param.ParameterName = "@Phone";
+                param.Value = phone;
+                param.SqlDbType = SqlDbType.Char;
+                cmd.Parameters.Add(param);
+
+                param = new SqlParameter();
+                param.ParameterName = "@DateStart";
+                param.Value = dateStart;
+                param.SqlDbType = SqlDbType.Date;
+                cmd.Parameters.Add(param);
+
+                param = new SqlParameter();
+                param.ParameterName = "@ClientStatus";
                 param.Value = status;
                 param.SqlDbType = SqlDbType.Bit;
                 cmd.Parameters.Add(param);
@@ -153,7 +199,7 @@ namespace DBHelper
         }
         public static void DeleteClient(int id, SqlConnection cn)
         {
-            string sql = string.Format("Delete from Client where ID = '{0}'", id);
+            string sql = string.Format("Delete from Clients where ID = '{0}'", id);
             using (SqlCommand cmd = new SqlCommand(sql, cn))
             {
                 try
@@ -168,26 +214,23 @@ namespace DBHelper
             }
         }
 
-        public static void UpdateClient(int id, string name, string adress, string phone, string dateStart, bool status, SqlConnection cn)
+        public static DataSet GetAllData(SqlConnection cn)
         {
-            string sql = string.Format("Update Clients Set Name = '{0}', Adress = '{1}', Phone, DateStart, Status Where ID = '{1}'", name, id);
-            using (SqlCommand cmd = new SqlCommand(sql, cn))
-            {
-                cmd.ExecuteNonQuery();
-            }
+            SqlDataAdapter da = new SqlDataAdapter("select * from clients", cn);
+            SqlCommandBuilder cb = new SqlCommandBuilder(da);
+            DataSet ds = new DataSet();
+            da.Fill(ds);
+            return ds;
         }
 
-        public static DataTable GetAllUserAsDataTable(SqlConnection cn)
+        public static DataSet GetRecord(int id, SqlConnection cn)
         {
-            DataTable usr = new DataTable();
-            string sql = "Select * From Clients";
-            using (SqlCommand cmd = new SqlCommand(sql, cn))
-            {
-                SqlDataReader dr = cmd.ExecuteReader();
-                usr.Load(dr);
-                dr.Close();
-            }
-            return usr;
+            string sql = string.Format("select * from clients where ID = '{0}'", id);
+            SqlDataAdapter da = new SqlDataAdapter(sql, cn);
+            SqlCommandBuilder cb = new SqlCommandBuilder(da);
+            DataSet ds = new DataSet();
+            da.Fill(ds);
+            return ds;    
         }
     }
 }

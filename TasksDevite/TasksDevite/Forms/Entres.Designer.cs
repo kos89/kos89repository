@@ -71,6 +71,7 @@
             this.Controls.Add(this.comboBoxUser);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "EntresForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Entres";
             this.Load += new System.EventHandler(this.Entres_Load);
             this.ResumeLayout(false);
