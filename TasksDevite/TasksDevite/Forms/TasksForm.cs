@@ -135,7 +135,7 @@ namespace TasksDevite
             Service service = new Service("cl", "companyName-appName-1");
             service.setUserCredentials("sviridov@devite.ru", "sviridkos");
 
-            AtomEntry entry = new AtomEntry();
+            EventEntry entry = new EventEntry();
             AtomPerson author = new AtomPerson(AtomPersonType.Author);
             author.Name = "Kos";
             author.Email = "sviridov@devite.ru";
@@ -146,7 +146,7 @@ namespace TasksDevite
             When eventTimes = new When();
             eventTimes.StartTime = DateTime.Parse("26/09/2013 12:00:00 PM");
             eventTimes.EndTime = DateTime.Parse("26/09/2013 13:00:00 PM");
-            //entry.Times.Add(eventTimes);
+            entry.Times.Add(eventTimes);
 
             Uri postUri = new Uri("http://www.google.com/calendar/feeds/sviridov@devite.ru/private/full");
 
