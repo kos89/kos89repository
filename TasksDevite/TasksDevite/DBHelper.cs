@@ -178,7 +178,7 @@ namespace DBHelper
 
         public static int GetID(SqlConnection cn)
         {
-            using (SqlCommand cmd = new SqlCommand("select count(*) from Clients", cn))
+            using (SqlCommand cmd = new SqlCommand("select ID from Clients order by ID desc", cn))
             {
                 SqlDataReader dr = cmd.ExecuteReader();
                 try
@@ -208,7 +208,7 @@ namespace DBHelper
                 }
                 catch (SqlException ex)
                 {
-                    Exception error = new Exception("Нет такого пользователя!", ex);
+                    Exception error = new Exception("Нет такого пользователя!", ex); //TODO не дает удалить из за связи
                     throw error;
                 }
             }
@@ -231,6 +231,163 @@ namespace DBHelper
             DataSet ds = new DataSet();
             da.Fill(ds);
             return ds;    
+        }
+    }
+
+    public class TaskDAL
+    {
+        public static void InsertTask(int id, int userID, int clientID, DateTime date, bool status, string about, SqlConnection cn)
+        {
+            string sql = ("Insert Into Tasks (ID, UserID, ClientID, Date, TaskStatus, About)" +
+                "Values(@ID, @UserID, @ClientID, @Date, @TaskStatus, @About)");
+
+            using (SqlCommand cmd = new SqlCommand(sql, cn))
+            {
+                SqlParameter param = new SqlParameter();
+                param.ParameterName = "@ID";
+                param.Value = id;
+                param.SqlDbType = SqlDbType.Int;
+                cmd.Parameters.Add(param);
+
+                param = new SqlParameter();
+                param.ParameterName = "@UserID";
+                param.Value = userID;
+                param.SqlDbType = SqlDbType.Int;
+                cmd.Parameters.Add(param);
+
+                param = new SqlParameter();
+                param.ParameterName = "@ClientID";
+                param.Value = clientID;
+                param.SqlDbType = SqlDbType.Int;
+                cmd.Parameters.Add(param);
+
+                param = new SqlParameter();
+                param.ParameterName = "@Date";
+                param.Value = date;
+                param.SqlDbType = SqlDbType.Date;
+                cmd.Parameters.Add(param);
+
+                param = new SqlParameter();
+                param.ParameterName = "@TaskStatus";
+                param.Value = status;
+                param.SqlDbType = SqlDbType.Bit;
+                cmd.Parameters.Add(param);
+
+                param = new SqlParameter();
+                param.ParameterName = "@About";
+                param.Value = about;
+                param.SqlDbType = SqlDbType.Char;
+                cmd.Parameters.Add(param);
+
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public static void UpdateTask(int id, int userID, int clientID, DateTime date, bool status, string about, SqlConnection cn)
+        {
+            string sql = ("Update Tasks Set UserID = @UserID, ClientID = @ClientID, Date = @Date, TaskStatus = @TaskStatus, About = @About Where ID = @ID");
+
+            using (SqlCommand cmd = new SqlCommand(sql, cn))
+            {
+                SqlParameter param = new SqlParameter();
+                param.ParameterName = "@ID";
+                param.Value = id;
+                param.SqlDbType = SqlDbType.Int;
+                cmd.Parameters.Add(param);
+
+                param = new SqlParameter();
+                param.ParameterName = "@UserID";
+                param.Value = userID;
+                param.SqlDbType = SqlDbType.Int;
+                cmd.Parameters.Add(param);
+
+                param = new SqlParameter();
+                param.ParameterName = "@ClientID";
+                param.Value = clientID;
+                param.SqlDbType = SqlDbType.Int;
+                cmd.Parameters.Add(param);
+
+                param = new SqlParameter();
+                param.ParameterName = "@Date";
+                param.Value = date;
+                param.SqlDbType = SqlDbType.Date;
+                cmd.Parameters.Add(param);
+
+                param = new SqlParameter();
+                param.ParameterName = "@TaskStatus";
+                param.Value = status;
+                param.SqlDbType = SqlDbType.Bit;
+                cmd.Parameters.Add(param);
+
+                param = new SqlParameter();
+                param.ParameterName = "@About";
+                param.Value = about;
+                param.SqlDbType = SqlDbType.Char;
+                cmd.Parameters.Add(param);
+
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public static int GetID(SqlConnection cn)
+        {
+            using (SqlCommand cmd = new SqlCommand("select ID from Tasks order by ID desc", cn))
+            {
+                SqlDataReader dr = cmd.ExecuteReader();
+                try
+                {
+                    dr.Read();
+                    return Convert.ToInt32(dr[0]) + 1;
+                }
+                catch (SqlException ex)
+                {
+                    Exception error = new Exception("Ошибка с доступом к таблице Tasks", ex);
+                    throw error;
+                }
+                finally
+                {
+                    dr.Close();
+                }
+            }
+        }
+        public static void DeleteTask(int id, SqlConnection cn)
+        {
+            string sql = string.Format("Delete from Tasks where ID = '{0}'", id);
+            using (SqlCommand cmd = new SqlCommand(sql, cn))
+            {
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+                    Exception error = new Exception("Нет такого тикета!", ex);
+                    throw error;
+                }
+            }
+        }
+
+        public static DataSet GetAllData(SqlConnection cn)
+        {
+            SqlDataAdapter da = new SqlDataAdapter("select * from Tasks", cn);
+            SqlCommandBuilder cb = new SqlCommandBuilder(da);
+            DataSet ds = new DataSet();
+            da.Fill(ds);
+            return ds;
+        }
+
+        public static DataSet GetFullRecord(int id, SqlConnection cn)
+        {
+            string sql = string.Format( "SELECT t.ID, t.UserID, t.ClientID, t.Date, t.TaskStatus, t.About, u.Users, c.Name " +
+                                        "FROM  Tasks t " + 
+                                        "INNER JOIN Clients c ON c.ID = t.ClientID " +
+                                        "INNER JOIN Users u ON t.UserID = u.ID " +
+                                        "WHERE t.ID = '{0}'", id);
+            SqlDataAdapter da = new SqlDataAdapter(sql, cn);
+            SqlCommandBuilder cb = new SqlCommandBuilder(da);
+            DataSet ds = new DataSet();
+            da.Fill(ds);
+            return ds;
         }
     }
 }
