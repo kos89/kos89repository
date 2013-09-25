@@ -49,13 +49,22 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Google.GData.Calendar, Version=2.2.0.0, Culture=neutral, PublicKeyToken=aa6748391206b888, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\Google.GData.Calendar.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.GData.Client, Version=2.2.0.0, Culture=neutral, PublicKeyToken=04a59ca9b0273830, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\Google.GData.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.GData.Extensions, Version=2.2.0.0, Culture=neutral, PublicKeyToken=0b4c5df2ebf20876, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\Google.GData.Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Linq" />
-    <Reference Include="System.Windows.Forms.Calendar">
-      <HintPath>.\System.Windows.Forms.Calendar.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -100,6 +109,12 @@
     <Compile Include="Forms\TasksForm.Designer.cs">
       <DependentUpon>TasksForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\TaskAddForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\TaskAddForm.Designer.cs">
+      <DependentUpon>TaskAddForm.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Forms\ClientAddForm.resx">
       <DependentUpon>ClientAddForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -123,6 +138,9 @@
     </Compile>
     <EmbeddedResource Include="Forms\TasksForm.resx">
       <DependentUpon>TasksForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\TaskAddForm.resx">
+      <DependentUpon>TaskAddForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config">
       <SubType>Designer</SubType>
