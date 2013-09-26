@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using System.Data.SqlClient;
 using DBHelper;
@@ -58,15 +53,23 @@ namespace TasksDevite
             if (taf.ShowDialog() == DialogResult.OK)
             {
                 bool status;
+                string days;
+
                 status = taf.StatusComboBox.Text == "Открыт";
+
+                foreach (CheckBox c in taf.Controls)
+                {
+                    MessageBox.Show(c.Checked.ToString());
+                }
 
                 SqlConnection cn = new SqlConnection();
                 cn = DBDevite.DBOpen();
                 
-                TaskDAL.InsertTask(TaskDAL.GetID(cn),
+                /*TaskDAL.InsertTask(TaskDAL.GetID(cn),
                     Convert.ToInt32(taf.UserСomboBox.SelectedValue), 
                     Convert.ToInt32(taf.ClientComboBox.SelectedValue), 
-                    taf.DateTimePicker.Value.Date, status, taf.AboutRichTextBox.Text, cn);
+                    taf.DateTimePicker.Value.Date, 
+                    status, taf.AboutRichTextBox.Text, cn);*/
 
                 DBDevite.DBClose(cn);
                 GridReload();
@@ -112,10 +115,10 @@ namespace TasksDevite
                     bool status;
                     status = taf.StatusComboBox.Text == "Открыт";
 
-                    TaskDAL.UpdateTask(focused,
+                   /* TaskDAL.UpdateTask(focused,
                         Convert.ToInt32(taf.UserСomboBox.SelectedValue),
                         Convert.ToInt32(taf.UserСomboBox.SelectedValue),
-                        taf.DateTimePicker.Value.Date, status, taf.AboutRichTextBox.Text, cn);
+                        taf.DateTimePicker.Value.Date, status, taf.AboutRichTextBox.Text, cn);*/
 
                     GridReload();
                 }
@@ -133,25 +136,26 @@ namespace TasksDevite
         private void button1_Click(object sender, EventArgs e)
         {
             Service service = new Service("cl", "companyName-appName-1");
-            service.setUserCredentials("sviridov@devite.ru", "sviridkos");
+            service.setUserCredentials("task@devite.ru", "jWH>45bY1");
 
             EventEntry entry = new EventEntry();
             AtomPerson author = new AtomPerson(AtomPersonType.Author);
             author.Name = "Kos";
-            author.Email = "sviridov@devite.ru";
+            author.Email = "task@devite.ru";
             entry.Authors.Add(author);
-            entry.Title.Text = "test";
-            entry.Content.Content = "testtest";
+            entry.Title.Text = "Кирилл хуил";
+            entry.Content.Content = "Кирилл хуил!Кирилл хуил!";
 
             When eventTimes = new When();
-            eventTimes.StartTime = DateTime.Parse("26/09/2013 12:00:00 PM");
-            eventTimes.EndTime = DateTime.Parse("26/09/2013 13:00:00 PM");
+            eventTimes.StartTime = DateTime.Parse("28/09/2013 12:00:00 PM");
+            eventTimes.EndTime = DateTime.Parse("28/09/2013 13:00:00 PM");
             entry.Times.Add(eventTimes);
 
-            Uri postUri = new Uri("http://www.google.com/calendar/feeds/sviridov@devite.ru/private/full");
+            Uri postUri = new Uri("http://www.google.com/calendar/feeds/task@devite.ru/private/full");
 
             // Send the request and receive the response:
             AtomEntry insertedEntry = service.Insert(postUri, entry);
+
         }
     }
 }

@@ -98,6 +98,7 @@
     <Compile Include="Forms\Entres.Designer.cs">
       <DependentUpon>Entres.cs</DependentUpon>
     </Compile>
+    <Compile Include="FunctionHelper.cs" />
     <Compile Include="GlobalVar.cs" />
     <Compile Include="Forms\MainForm.cs">
       <SubType>Form</SubType>

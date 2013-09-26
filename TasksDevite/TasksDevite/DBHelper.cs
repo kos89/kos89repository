@@ -236,10 +236,10 @@ namespace DBHelper
 
     public class TaskDAL
     {
-        public static void InsertTask(int id, int userID, int clientID, DateTime date, bool status, string about, SqlConnection cn)
+        public static void InsertTask(int id, int userID, int clientID, DateTime date, string days, string timeStart, string timeEnd, bool status, string about, SqlConnection cn)
         {
-            string sql = ("Insert Into Tasks (ID, UserID, ClientID, Date, TaskStatus, About)" +
-                "Values(@ID, @UserID, @ClientID, @Date, @TaskStatus, @About)");
+            string sql = ("Insert Into Tasks (ID, UserID, ClientID, Date, Days, TimeStart, TimeEnd, TaskStatus, About)" +
+                "Values(@ID, @UserID, @ClientID, @Date, @Days, @TimeStart, @TimeEnd, @TaskStatus, @About)");
 
             using (SqlCommand cmd = new SqlCommand(sql, cn))
             {
@@ -265,6 +265,24 @@ namespace DBHelper
                 param.ParameterName = "@Date";
                 param.Value = date;
                 param.SqlDbType = SqlDbType.Date;
+                cmd.Parameters.Add(param);
+
+                param = new SqlParameter();
+                param.ParameterName = "@Days";
+                param.Value = about;
+                param.SqlDbType = SqlDbType.Char;
+                cmd.Parameters.Add(param);
+
+                param = new SqlParameter();
+                param.ParameterName = "@TimeStart";
+                param.Value = about;
+                param.SqlDbType = SqlDbType.Char;
+                cmd.Parameters.Add(param);
+
+                param = new SqlParameter();
+                param.ParameterName = "@TimeEnd";
+                param.Value = about;
+                param.SqlDbType = SqlDbType.Char;
                 cmd.Parameters.Add(param);
 
                 param = new SqlParameter();
@@ -283,9 +301,17 @@ namespace DBHelper
             }
         }
 
-        public static void UpdateTask(int id, int userID, int clientID, DateTime date, bool status, string about, SqlConnection cn)
+        public static void UpdateTask(int id, int userID, int clientID, DateTime date, string days, string timeStart, string timeEnd, bool status, string about, SqlConnection cn)
         {
-            string sql = ("Update Tasks Set UserID = @UserID, ClientID = @ClientID, Date = @Date, TaskStatus = @TaskStatus, About = @About Where ID = @ID");
+            string sql = ("Update Tasks Set UserID = @UserID," + 
+                            "ClientID = @ClientID, " + 
+                            "Date = @Date, " + 
+                            "Days = @Days, " + 
+                            "TimeStart = @TimeStart, " +
+                            "TimeEnd = @TimeEnd, " + 
+                            "TaskStatus = @TaskStatus, " +
+                            "About = @About " +
+                          "Where ID = @ID");
 
             using (SqlCommand cmd = new SqlCommand(sql, cn))
             {
@@ -311,6 +337,24 @@ namespace DBHelper
                 param.ParameterName = "@Date";
                 param.Value = date;
                 param.SqlDbType = SqlDbType.Date;
+                cmd.Parameters.Add(param);
+                param = new SqlParameter();
+
+                param.ParameterName = "@Days";
+                param.Value = about;
+                param.SqlDbType = SqlDbType.Char;
+                cmd.Parameters.Add(param);
+
+                param = new SqlParameter();
+                param.ParameterName = "@TimeStart";
+                param.Value = about;
+                param.SqlDbType = SqlDbType.Char;
+                cmd.Parameters.Add(param);
+
+                param = new SqlParameter();
+                param.ParameterName = "@TimeEnd";
+                param.Value = about;
+                param.SqlDbType = SqlDbType.Char;
                 cmd.Parameters.Add(param);
 
                 param = new SqlParameter();
