@@ -55,7 +55,7 @@
             this.dataGridViewTask.ReadOnly = true;
             this.dataGridViewTask.RowHeadersVisible = false;
             this.dataGridViewTask.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewTask.Size = new System.Drawing.Size(550, 150);
+            this.dataGridViewTask.Size = new System.Drawing.Size(695, 235);
             this.dataGridViewTask.TabIndex = 0;
             // 
             // buttonAdd
@@ -112,9 +112,9 @@
         calendarHighlightRange3,
         calendarHighlightRange4,
         calendarHighlightRange5};
-            this.calendar1.Location = new System.Drawing.Point(286, 218);
+            this.calendar1.Location = new System.Drawing.Point(415, 343);
             this.calendar1.Name = "calendar1";
-            this.calendar1.Size = new System.Drawing.Size(840, 413);
+            this.calendar1.Size = new System.Drawing.Size(711, 288);
             this.calendar1.TabIndex = 5;
             this.calendar1.Text = "calendar1";
             // 
@@ -128,7 +128,7 @@
             this.monthView1.DaySelectedColor = System.Drawing.SystemColors.WindowText;
             this.monthView1.DaySelectedTextColor = System.Drawing.SystemColors.HighlightText;
             this.monthView1.ItemPadding = new System.Windows.Forms.Padding(2);
-            this.monthView1.Location = new System.Drawing.Point(11, 218);
+            this.monthView1.Location = new System.Drawing.Point(74, 298);
             this.monthView1.MonthTitleColor = System.Drawing.SystemColors.ActiveCaption;
             this.monthView1.MonthTitleColorInactive = System.Drawing.SystemColors.InactiveCaption;
             this.monthView1.MonthTitleTextColor = System.Drawing.SystemColors.ActiveCaptionText;

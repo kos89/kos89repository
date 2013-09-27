@@ -30,12 +30,38 @@ namespace TasksDevite
             if (claForm.ShowDialog() == DialogResult.OK)
             {
                 bool status;
+                string days = "";
+
                 status = claForm.StatusComboBox.Text == "Да";
+
+                foreach (Control c in claForm.Controls)
+                {
+                    CheckBox cb = c as CheckBox;
+                    if (cb != null)
+                    {
+                        if (cb.Checked)
+                            days += "1";
+                        else
+                            days += "0";
+                    }
+                }
+                char[] arr = days.ToCharArray();
+                Array.Reverse(arr);
+                days = new String(arr);
                 
                 SqlConnection cn = new SqlConnection();
                 cn = DBDevite.DBOpen();
-                ClientDAL.InsertClient(ClientDAL.GetID(cn), claForm.NameTextBox.Text, claForm.AdressTextBox.Text, claForm.PhoneTextBox.Text,
-                    claForm.DateStartTimePicker.Value.Date, status, cn);
+                
+                ClientDAL.InsertClient(ClientDAL.GetID(cn), 
+                                       claForm.NameTextBox.Text,
+                                       claForm.AdressTextBox.Text,
+                                       claForm.PhoneTextBox.Text,
+                                       claForm.DateStartTimePicker.Value.Date,
+                                       days,
+                                       claForm.TimeStartComboBox.Text,
+                                       claForm.TimeEndComboBox.Text,
+                                       status, cn);
+
                 DBDevite.DBClose(cn);
                 GridReload();
             }
@@ -48,12 +74,27 @@ namespace TasksDevite
             SqlConnection cn = new SqlConnection();
             try
             {
+                string days;
+                int i = 6;
                 cn = DBDevite.DBOpen();
                 DataSet dt = ClientDAL.GetRecord(focused, cn);
+
                 claForm.NameTextBox.Text = dt.Tables[0].Rows[0]["Name"].ToString();
                 claForm.AdressTextBox.Text = dt.Tables[0].Rows[0]["Adress"].ToString();
                 claForm.PhoneTextBox.Text = dt.Tables[0].Rows[0]["Phone"].ToString();
                 claForm.DateStartTimePicker.Value = Convert.ToDateTime(dt.Tables[0].Rows[0]["DateStart"].ToString());
+                days = dt.Tables[0].Rows[0]["Days"].ToString();
+                foreach (Control c in claForm.Controls)
+                {
+                    CheckBox cb = c as CheckBox;
+                    if (cb != null)
+                    {
+                        cb.Checked = days[i] == '1';
+                        i -= 1;
+                    }
+                }
+                claForm.TimeStartComboBox.Text = dt.Tables[0].Rows[0]["TimeStart"].ToString();
+                claForm.TimeEndComboBox.Text = dt.Tables[0].Rows[0]["TimeEnd"].ToString();
                 if (dt.Tables[0].Rows[0]["ClientStatus"].ToString() == "True") 
                     claForm.StatusComboBox.Text = "Да";
                 else
@@ -62,10 +103,34 @@ namespace TasksDevite
                 if (claForm.ShowDialog() == DialogResult.OK)
                 {
                     bool status;
+                    days = "";
+
                     status = claForm.StatusComboBox.Text == "Да";
 
-                    ClientDAL.UpdateClient(focused, claForm.NameTextBox.Text, claForm.AdressTextBox.Text, claForm.PhoneTextBox.Text,
-                        claForm.DateStartTimePicker.Value.Date, status, cn);
+                    foreach (Control c in claForm.Controls)
+                    {
+                        CheckBox cb = c as CheckBox;
+                        if (cb != null)
+                        {
+                            if (cb.Checked)
+                                days += "1";
+                            else
+                                days += "0";
+                        }
+                    }
+                    char[] arr = days.ToCharArray();
+                    Array.Reverse(arr);
+                    days = new String(arr);
+
+                    ClientDAL.UpdateClient(focused, 
+                                           claForm.NameTextBox.Text, 
+                                           claForm.AdressTextBox.Text, 
+                                           claForm.PhoneTextBox.Text,
+                                           claForm.DateStartTimePicker.Value.Date,
+                                           days,
+                                           claForm.TimeStartComboBox.Text,
+                                           claForm.TimeEndComboBox.Text,
+                                           status, cn);
                     GridReload();
                 }
             }
@@ -102,7 +167,14 @@ namespace TasksDevite
             {
                 cn = DBDevite.DBOpen();
 
-                SqlDataAdapter da = new SqlDataAdapter("select ID,Name as Название,Phone as Телефон,Adress as Адрес,DateStart as Дата_начала_договора,ClientStatus as Статус from clients", cn);
+                SqlDataAdapter da = new SqlDataAdapter("select ID, Name as Название, " +
+                                                       "Phone as Телефон, "+
+                                                       "Adress as Адрес, " +
+                                                       "Days as Дни_недели, " +
+                                                       "TimeStart as Начало, " +
+                                                       "TimeEnd as Конец, " +
+                                                       "DateStart as Дата_начала_договора, "+
+                                                       "ClientStatus as Статус from clients", cn);
                 SqlCommandBuilder cb = new SqlCommandBuilder(da);
                 DataSet ds = new DataSet();
                 da.Fill(ds);

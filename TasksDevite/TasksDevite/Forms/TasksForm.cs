@@ -28,7 +28,7 @@ namespace TasksDevite
             {
                 cn = DBDevite.DBOpen();
 
-                SqlDataAdapter da = new SqlDataAdapter("SELECT t.ID, u.Users as Фамилия, c.Name as Клиент, t.Date as Дата, t.TaskStatus as Статус " +
+                SqlDataAdapter da = new SqlDataAdapter("SELECT t.ID, u.Users as Фамилия, c.Name as Клиент, t.Date as Дата, t.TimeStart as Начало, t.TimeEnd as Конец, t.TaskStatus as Статус " +
                                                        "FROM tasks t " +
                                                        "LEFT JOIN users u ON t.userID = u.ID " + 
                                                        "LEFT JOIN clients c ON t.clientID = c.ID", cn);
@@ -53,23 +53,19 @@ namespace TasksDevite
             if (taf.ShowDialog() == DialogResult.OK)
             {
                 bool status;
-                string days;
-
                 status = taf.StatusComboBox.Text == "Открыт";
-
-                foreach (CheckBox c in taf.Controls)
-                {
-                    MessageBox.Show(c.Checked.ToString());
-                }
 
                 SqlConnection cn = new SqlConnection();
                 cn = DBDevite.DBOpen();
                 
-                /*TaskDAL.InsertTask(TaskDAL.GetID(cn),
-                    Convert.ToInt32(taf.UserСomboBox.SelectedValue), 
-                    Convert.ToInt32(taf.ClientComboBox.SelectedValue), 
-                    taf.DateTimePicker.Value.Date, 
-                    status, taf.AboutRichTextBox.Text, cn);*/
+                TaskDAL.InsertTask(TaskDAL.GetID(cn),
+                                   Convert.ToInt32(taf.UserСomboBox.SelectedValue), 
+                                   Convert.ToInt32(taf.ClientComboBox.SelectedValue), 
+                                   taf.DateTimePicker.Value.Date, 
+                                   taf.TimeStartComboBox.Text,
+                                   taf.TimeEndComboBox.Text,
+                                   status,
+                                   taf.AboutRichTextBox.Text, cn);
 
                 DBDevite.DBClose(cn);
                 GridReload();
@@ -109,16 +105,22 @@ namespace TasksDevite
                 else
                     taf.StatusComboBox.Text = "Закрыт";
                 taf.AboutRichTextBox.Text = dt.Tables[0].Rows[0]["About"].ToString();
+                taf.TimeStartComboBox.Text = dt.Tables[0].Rows[0]["TimeStart"].ToString();
+                taf.TimeEndComboBox.Text = dt.Tables[0].Rows[0]["TimeEnd"].ToString();
 
                 if (taf.ShowDialog() == DialogResult.OK)
                 {
                     bool status;
                     status = taf.StatusComboBox.Text == "Открыт";
 
-                   /* TaskDAL.UpdateTask(focused,
+                    TaskDAL.UpdateTask(focused,
                         Convert.ToInt32(taf.UserСomboBox.SelectedValue),
-                        Convert.ToInt32(taf.UserСomboBox.SelectedValue),
-                        taf.DateTimePicker.Value.Date, status, taf.AboutRichTextBox.Text, cn);*/
+                        Convert.ToInt32(taf.ClientComboBox.SelectedValue),
+                        taf.DateTimePicker.Value.Date,
+                        taf.TimeStartComboBox.Text,
+                        taf.TimeEndComboBox.Text,
+                        status, 
+                        taf.AboutRichTextBox.Text, cn);
 
                     GridReload();
                 }

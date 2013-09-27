@@ -13,9 +13,9 @@ namespace DBHelper
         {
             SqlConnectionStringBuilder connect = new SqlConnectionStringBuilder();
             connect.InitialCatalog = "test";
-            //connect.DataSource = @"(local)\SQLEXPRESS";
-            connect.DataSource = @"(local)";
-            connect.AttachDBFilename = @"C:\Program Files\Microsoft SQL Server\MSSQL10.SQLEXPRESS\MSSQL\DATA\test.mdf";
+            connect.DataSource = @"(local)\SQLEXPRESS";
+            //connect.DataSource = @"(local)";
+            //connect.AttachDBFilename = @"C:\Program Files\Microsoft SQL Server\MSSQL10.SQLEXPRESS\MSSQL\DATA\test.mdf";
             connect.ConnectTimeout = 30;
             connect.IntegratedSecurity = true;
             SqlConnection cn = new SqlConnection();
@@ -83,10 +83,10 @@ namespace DBHelper
 
     public class ClientDAL
     {
-        public static void InsertClient(int id, string name, string adress, string phone, DateTime dateStart, bool status, SqlConnection cn)
+        public static void InsertClient(int id, string name, string adress, string phone, DateTime dateStart, string days, string timeStart, string timeEnd, bool status, SqlConnection cn)
         {
-            string sql = ("Insert Into Clients (ID, Name, Adress, Phone, DateStart, ClientStatus)" +
-                "Values(@ID, @Name, @Adress, @Phone, @DateStart, @ClientStatus)");
+            string sql = ("Insert Into Clients (ID, Name, Adress, Phone, DateStart, Days, TimeStart, TimeEnd, ClientStatus)" +
+                "Values(@ID, @Name, @Adress, @Phone, @DateStart, @Days, @TimeStart, @TimeEnd, @ClientStatus)");
 
             using (SqlCommand cmd = new SqlCommand(sql, cn))
             {
@@ -118,6 +118,24 @@ namespace DBHelper
                 param.ParameterName = "@DateStart";
                 param.Value = dateStart;
                 param.SqlDbType = SqlDbType.Date;
+                cmd.Parameters.Add(param);
+
+                param = new SqlParameter();
+                param.ParameterName = "@Days";
+                param.Value = days;
+                param.SqlDbType = SqlDbType.Char;
+                cmd.Parameters.Add(param);
+
+                param = new SqlParameter();
+                param.ParameterName = "@TimeStart";
+                param.Value = timeStart;
+                param.SqlDbType = SqlDbType.Char;
+                cmd.Parameters.Add(param);
+
+                param = new SqlParameter();
+                param.ParameterName = "@TimeEnd";
+                param.Value = timeEnd;
+                param.SqlDbType = SqlDbType.Char;
                 cmd.Parameters.Add(param);
 
                 param = new SqlParameter();
@@ -130,9 +148,9 @@ namespace DBHelper
             }
         }
 
-        public static void UpdateClient(int id, string name, string adress, string phone, DateTime dateStart, bool status, SqlConnection cn)
+        public static void UpdateClient(int id, string name, string adress, string phone, DateTime dateStart, string days, string timeStart, string timeEnd, bool status, SqlConnection cn)
         {
-            string sql = ("Update Clients Set Name = @Name, Adress = @Adress, Phone = @Phone, DateStart = @DateStart, ClientStatus = @ClientStatus Where ID = @ID");
+            string sql = ("Update Clients Set Name = @Name, Adress = @Adress, Phone = @Phone, DateStart = @DateStart, Days = @Days, TimeStart = @TimeStart, TimeEnd = @TimeEnd, ClientStatus = @ClientStatus Where ID = @ID");
 
             using (SqlCommand cmd = new SqlCommand(sql, cn))
             {
@@ -164,6 +182,24 @@ namespace DBHelper
                 param.ParameterName = "@DateStart";
                 param.Value = dateStart;
                 param.SqlDbType = SqlDbType.Date;
+                cmd.Parameters.Add(param);
+
+                param = new SqlParameter();
+                param.ParameterName = "@Days";
+                param.Value = days;
+                param.SqlDbType = SqlDbType.Char;
+                cmd.Parameters.Add(param);
+
+                param = new SqlParameter();
+                param.ParameterName = "@TimeStart";
+                param.Value = timeStart;
+                param.SqlDbType = SqlDbType.Char;
+                cmd.Parameters.Add(param);
+
+                param = new SqlParameter();
+                param.ParameterName = "@TimeEnd";
+                param.Value = timeEnd;
+                param.SqlDbType = SqlDbType.Char;
                 cmd.Parameters.Add(param);
 
                 param = new SqlParameter();
@@ -184,7 +220,7 @@ namespace DBHelper
                 try
                 {
                     dr.Read();
-                    return Convert.ToInt32(dr[0])+1;
+                    return (dr.HasRows) ? Convert.ToInt32(dr[0]) + 1 : 1;
                 }
                 catch (SqlException ex)
                 {
@@ -236,10 +272,10 @@ namespace DBHelper
 
     public class TaskDAL
     {
-        public static void InsertTask(int id, int userID, int clientID, DateTime date, string days, string timeStart, string timeEnd, bool status, string about, SqlConnection cn)
+        public static void InsertTask(int id, int userID, int clientID, DateTime date, string timeStart, string timeEnd, bool status, string about, SqlConnection cn)
         {
-            string sql = ("Insert Into Tasks (ID, UserID, ClientID, Date, Days, TimeStart, TimeEnd, TaskStatus, About)" +
-                "Values(@ID, @UserID, @ClientID, @Date, @Days, @TimeStart, @TimeEnd, @TaskStatus, @About)");
+            string sql = ("Insert Into Tasks (ID, UserID, ClientID, Date, TimeStart, TimeEnd, TaskStatus, About)" +
+                "Values(@ID, @UserID, @ClientID, @Date, @TimeStart, @TimeEnd, @TaskStatus, @About)");
 
             using (SqlCommand cmd = new SqlCommand(sql, cn))
             {
@@ -268,20 +304,14 @@ namespace DBHelper
                 cmd.Parameters.Add(param);
 
                 param = new SqlParameter();
-                param.ParameterName = "@Days";
-                param.Value = about;
-                param.SqlDbType = SqlDbType.Char;
-                cmd.Parameters.Add(param);
-
-                param = new SqlParameter();
                 param.ParameterName = "@TimeStart";
-                param.Value = about;
+                param.Value = timeStart;
                 param.SqlDbType = SqlDbType.Char;
                 cmd.Parameters.Add(param);
 
                 param = new SqlParameter();
                 param.ParameterName = "@TimeEnd";
-                param.Value = about;
+                param.Value = timeEnd;
                 param.SqlDbType = SqlDbType.Char;
                 cmd.Parameters.Add(param);
 
@@ -301,12 +331,11 @@ namespace DBHelper
             }
         }
 
-        public static void UpdateTask(int id, int userID, int clientID, DateTime date, string days, string timeStart, string timeEnd, bool status, string about, SqlConnection cn)
+        public static void UpdateTask(int id, int userID, int clientID, DateTime date, string timeStart, string timeEnd, bool status, string about, SqlConnection cn)
         {
             string sql = ("Update Tasks Set UserID = @UserID," + 
                             "ClientID = @ClientID, " + 
                             "Date = @Date, " + 
-                            "Days = @Days, " + 
                             "TimeStart = @TimeStart, " +
                             "TimeEnd = @TimeEnd, " + 
                             "TaskStatus = @TaskStatus, " +
@@ -340,20 +369,15 @@ namespace DBHelper
                 cmd.Parameters.Add(param);
                 param = new SqlParameter();
 
-                param.ParameterName = "@Days";
-                param.Value = about;
-                param.SqlDbType = SqlDbType.Char;
-                cmd.Parameters.Add(param);
-
                 param = new SqlParameter();
                 param.ParameterName = "@TimeStart";
-                param.Value = about;
+                param.Value = timeStart;
                 param.SqlDbType = SqlDbType.Char;
                 cmd.Parameters.Add(param);
 
                 param = new SqlParameter();
                 param.ParameterName = "@TimeEnd";
-                param.Value = about;
+                param.Value = timeEnd;
                 param.SqlDbType = SqlDbType.Char;
                 cmd.Parameters.Add(param);
 
@@ -381,7 +405,7 @@ namespace DBHelper
                 try
                 {
                     dr.Read();
-                    return Convert.ToInt32(dr[0]) + 1;
+                    return (dr.HasRows) ? Convert.ToInt32(dr[0]) + 1 : 1;
                 }
                 catch (SqlException ex)
                 {
@@ -422,7 +446,7 @@ namespace DBHelper
 
         public static DataSet GetFullRecord(int id, SqlConnection cn)
         {
-            string sql = string.Format( "SELECT t.ID, t.UserID, t.ClientID, t.Date, t.TaskStatus, t.About, u.Users, c.Name " +
+            string sql = string.Format( "SELECT t.ID, t.UserID, t.ClientID, t.Date, t.TimeStart, t.TimeEnd, t.TaskStatus, t.About, u.Users, c.Name " +
                                         "FROM  Tasks t " + 
                                         "INNER JOIN Clients c ON c.ID = t.ClientID " +
                                         "INNER JOIN Users u ON t.UserID = u.ID " +
