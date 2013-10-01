@@ -18,10 +18,10 @@ namespace TasksDevite
 
         private void TasksForm_Load(object sender, EventArgs e)
         {
-            GridReload();
+            GridReload(0);
         }
 
-        private void GridReload()
+        private void GridReload(int id) //TODO ???
         {
             SqlConnection cn = new SqlConnection();
             try
@@ -36,6 +36,7 @@ namespace TasksDevite
                 DataSet ds = new DataSet();
                 da.Fill(ds);
                 dataGridViewTask.DataSource = ds.Tables[0];
+                dataGridViewTask.Rows[id].Selected = true;
             }
             catch (SqlException ex)
             {
@@ -68,7 +69,7 @@ namespace TasksDevite
                                    taf.AboutRichTextBox.Text, cn);
 
                 DBDevite.DBClose(cn);
-                GridReload();
+                GridReload(dataGridViewTask.RowCount);
             }
         }
 
@@ -83,7 +84,7 @@ namespace TasksDevite
                 TaskDAL.DeleteTask(Convert.ToInt32(dataGridViewTask[0, dataGridViewTask.CurrentRow.Index].Value), cn);
 
                 DBDevite.DBClose(cn);
-                GridReload();
+                GridReload(dataGridViewTask.RowCount - 2);
             }
         }
 
@@ -122,7 +123,7 @@ namespace TasksDevite
                         status, 
                         taf.AboutRichTextBox.Text, cn);
 
-                    GridReload();
+                    GridReload(focused - 2);
                 }
             }
             catch (SqlException ex)

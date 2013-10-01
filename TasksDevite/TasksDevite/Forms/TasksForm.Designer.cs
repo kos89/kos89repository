@@ -51,6 +51,7 @@
             this.dataGridViewTask.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridViewTask.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewTask.Location = new System.Drawing.Point(12, 41);
+            this.dataGridViewTask.MultiSelect = false;
             this.dataGridViewTask.Name = "dataGridViewTask";
             this.dataGridViewTask.ReadOnly = true;
             this.dataGridViewTask.RowHeadersVisible = false;
@@ -90,6 +91,7 @@
             // 
             // calendar1
             // 
+            this.calendar1.FirstDayOfWeek = System.DayOfWeek.Monday;
             this.calendar1.Font = new System.Drawing.Font("Segoe UI", 9F);
             calendarHighlightRange1.DayOfWeek = System.DayOfWeek.Monday;
             calendarHighlightRange1.EndTime = System.TimeSpan.Parse("17:00:00");
@@ -112,9 +114,10 @@
         calendarHighlightRange3,
         calendarHighlightRange4,
         calendarHighlightRange5};
-            this.calendar1.Location = new System.Drawing.Point(415, 343);
+            this.calendar1.Location = new System.Drawing.Point(12, 282);
+            this.calendar1.MaximumViewDays = 49;
             this.calendar1.Name = "calendar1";
-            this.calendar1.Size = new System.Drawing.Size(711, 288);
+            this.calendar1.Size = new System.Drawing.Size(520, 349);
             this.calendar1.TabIndex = 5;
             this.calendar1.Text = "calendar1";
             // 
@@ -128,7 +131,7 @@
             this.monthView1.DaySelectedColor = System.Drawing.SystemColors.WindowText;
             this.monthView1.DaySelectedTextColor = System.Drawing.SystemColors.HighlightText;
             this.monthView1.ItemPadding = new System.Windows.Forms.Padding(2);
-            this.monthView1.Location = new System.Drawing.Point(74, 298);
+            this.monthView1.Location = new System.Drawing.Point(791, 12);
             this.monthView1.MonthTitleColor = System.Drawing.SystemColors.ActiveCaption;
             this.monthView1.MonthTitleColorInactive = System.Drawing.SystemColors.InactiveCaption;
             this.monthView1.MonthTitleTextColor = System.Drawing.SystemColors.ActiveCaptionText;
@@ -141,7 +144,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(487, 12);
+            this.button1.Location = new System.Drawing.Point(632, 12);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 7;
