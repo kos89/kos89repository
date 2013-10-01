@@ -13,9 +13,9 @@ namespace DBHelper
         {
             SqlConnectionStringBuilder connect = new SqlConnectionStringBuilder();
             connect.InitialCatalog = "test";
-            //connect.DataSource = @"(local)\SQLEXPRESS";
-            connect.DataSource = @"(local)";
-            connect.AttachDBFilename = @"C:\Program Files\Microsoft SQL Server\MSSQL10.SQLEXPRESS\MSSQL\DATA\test.mdf";
+            connect.DataSource = @"(local)\SQLEXPRESS";
+            //connect.DataSource = @"(local)";
+            //connect.AttachDBFilename = @"C:\Program Files\Microsoft SQL Server\MSSQL10.SQLEXPRESS\MSSQL\DATA\test.mdf";
             connect.ConnectTimeout = 30;
             connect.IntegratedSecurity = true;
             SqlConnection cn = new SqlConnection();
@@ -83,10 +83,10 @@ namespace DBHelper
 
     public class ClientDAL
     {
-        public static void InsertClient(int id, string name, string adress, string phone, DateTime dateStart, string days, string timeStart, string timeEnd, bool status, SqlConnection cn)
+        public static void InsertClient(int id, string name, string adress, string phone, DateTime dateStart, string days, string timeStart, string timeEnd, int userID, bool status, SqlConnection cn)
         {
-            string sql = ("Insert Into Clients (ID, Name, Adress, Phone, DateStart, Days, TimeStart, TimeEnd, ClientStatus)" +
-                "Values(@ID, @Name, @Adress, @Phone, @DateStart, @Days, @TimeStart, @TimeEnd, @ClientStatus)");
+            string sql = ("Insert Into Clients (ID, Name, Adress, Phone, DateStart, Days, TimeStart, TimeEnd, UserID, ClientStatus)" +
+                "Values(@ID, @Name, @Adress, @Phone, @DateStart, @Days, @TimeStart, @TimeEnd, @UserID, @ClientStatus)");
 
             using (SqlCommand cmd = new SqlCommand(sql, cn))
             {
@@ -136,6 +136,12 @@ namespace DBHelper
                 param.ParameterName = "@TimeEnd";
                 param.Value = timeEnd;
                 param.SqlDbType = SqlDbType.Char;
+                cmd.Parameters.Add(param);
+
+                param = new SqlParameter();
+                param.ParameterName = "@UserID";
+                param.Value = userID;
+                param.SqlDbType = SqlDbType.Int;
                 cmd.Parameters.Add(param);
 
                 param = new SqlParameter();
@@ -148,9 +154,9 @@ namespace DBHelper
             }
         }
 
-        public static void UpdateClient(int id, string name, string adress, string phone, DateTime dateStart, string days, string timeStart, string timeEnd, bool status, SqlConnection cn)
+        public static void UpdateClient(int id, string name, string adress, string phone, DateTime dateStart, string days, string timeStart, string timeEnd, int userID, bool status, SqlConnection cn)
         {
-            string sql = ("Update Clients Set Name = @Name, Adress = @Adress, Phone = @Phone, DateStart = @DateStart, Days = @Days, TimeStart = @TimeStart, TimeEnd = @TimeEnd, ClientStatus = @ClientStatus Where ID = @ID");
+            string sql = ("Update Clients Set Name = @Name, Adress = @Adress, Phone = @Phone, DateStart = @DateStart, Days = @Days, TimeStart = @TimeStart, TimeEnd = @TimeEnd, UserID = @UserID, ClientStatus = @ClientStatus Where ID = @ID");
 
             using (SqlCommand cmd = new SqlCommand(sql, cn))
             {
@@ -200,6 +206,12 @@ namespace DBHelper
                 param.ParameterName = "@TimeEnd";
                 param.Value = timeEnd;
                 param.SqlDbType = SqlDbType.Char;
+                cmd.Parameters.Add(param);
+
+                param = new SqlParameter();
+                param.ParameterName = "@UserID";
+                param.Value = userID;
+                param.SqlDbType = SqlDbType.Int;
                 cmd.Parameters.Add(param);
 
                 param = new SqlParameter();
@@ -259,9 +271,12 @@ namespace DBHelper
             return ds;
         }
 
-        public static DataSet GetRecord(int id, SqlConnection cn)
+        public static DataSet GetFullRecord(int id, SqlConnection cn)
         {
-            string sql = string.Format("select * from clients where ID = '{0}'", id);
+            string sql = string.Format("SELECT * " +
+                                       "FROM clients c " +
+                                       "INNER JOIN users u ON c.UserID = u.ID " +
+                                       "WHERE c.ID = '{0}'", id);
             SqlDataAdapter da = new SqlDataAdapter(sql, cn);
             SqlCommandBuilder cb = new SqlCommandBuilder(da);
             DataSet ds = new DataSet();

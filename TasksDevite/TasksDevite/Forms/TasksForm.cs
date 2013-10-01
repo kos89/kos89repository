@@ -19,6 +19,8 @@ namespace TasksDevite
         private void TasksForm_Load(object sender, EventArgs e)
         {
             GridReload(0);
+            calendar1.ViewStart = Convert.ToDateTime("01.10.2013");
+            calendar1.ViewEnd = Convert.ToDateTime("6.10.2013");
         }
 
         private void GridReload(int id) //TODO ???
