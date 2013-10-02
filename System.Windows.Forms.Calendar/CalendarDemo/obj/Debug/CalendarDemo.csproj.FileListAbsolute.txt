@@ -1,0 +1,11 @@
+C:\Users\Константин\Desktop\System.Windows.Forms.Calendar\CalendarDemo\bin\Debug\CalendarDemo.exe
+C:\Users\Константин\Desktop\System.Windows.Forms.Calendar\CalendarDemo\bin\Debug\CalendarDemo.pdb
+C:\Users\Константин\Desktop\System.Windows.Forms.Calendar\CalendarDemo\bin\Debug\System.Windows.Forms.Calendar.dll
+C:\Users\Константин\Desktop\System.Windows.Forms.Calendar\CalendarDemo\bin\Debug\System.Windows.Forms.Calendar.pdb
+C:\Users\Константин\Desktop\System.Windows.Forms.Calendar\CalendarDemo\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Константин\Desktop\System.Windows.Forms.Calendar\CalendarDemo\obj\Debug\CalendarDemo.DemoForm.resources
+C:\Users\Константин\Desktop\System.Windows.Forms.Calendar\CalendarDemo\obj\Debug\CalendarDemo.Properties.Resources.resources
+C:\Users\Константин\Desktop\System.Windows.Forms.Calendar\CalendarDemo\obj\Debug\GenerateResource-ResGen.read.1.tlog
+C:\Users\Константин\Desktop\System.Windows.Forms.Calendar\CalendarDemo\obj\Debug\GenerateResource-ResGen.write.1.tlog
+C:\Users\Константин\Desktop\System.Windows.Forms.Calendar\CalendarDemo\obj\Debug\CalendarDemo.exe
+C:\Users\Константин\Desktop\System.Windows.Forms.Calendar\CalendarDemo\obj\Debug\CalendarDemo.pdb

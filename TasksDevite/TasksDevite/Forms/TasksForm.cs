@@ -6,11 +6,15 @@ using DBHelper;
 using Google.GData.Calendar;
 using Google.GData.Client;
 using Google.GData.Extensions;
+using System.Windows.Forms.Calendar;
+using System.Collections.Generic;
 
 namespace TasksDevite
 {
     public partial class TasksForm : Form
     {
+        List<CalendarItem> _items = new List<CalendarItem>();
+
         public TasksForm()
         {
             InitializeComponent();
@@ -19,8 +23,19 @@ namespace TasksDevite
         private void TasksForm_Load(object sender, EventArgs e)
         {
             GridReload(0);
-            calendar1.ViewStart = Convert.ToDateTime("01.10.2013");
-            calendar1.ViewEnd = Convert.ToDateTime("6.10.2013");
+            calendar.ViewStart = DateTime.Now.AddDays( 1 - Convert.ToInt32(DateTime.Now.DayOfWeek));
+            calendar.ViewEnd = DateTime.Now.AddDays( + (7 - Convert.ToInt32(DateTime.Now.DayOfWeek)));
+            
+            CalendarItem ci = new CalendarItem(calendar, DateTime.Now, DateTime.Now.AddDays(1), "fuck");
+            _items.Add(ci);
+                    
+            foreach (CalendarItem item in _items)
+            {
+                if (calendar.ViewIntersects(item))
+                {
+                    calendar.Items.Add(item);
+                }
+            }
         }
 
         private void GridReload(int id) //TODO ???
@@ -161,6 +176,38 @@ namespace TasksDevite
             // Send the request and receive the response:
             AtomEntry insertedEntry = service.Insert(postUri, entry);
 
+        }
+
+        private void comboBox1_TextChanged(object sender, EventArgs e)
+        {
+            if (ChangeModeComboBox.Text == "Месяц")
+            {
+                calendar.ViewStart = DateTime.Now.AddDays(-DateTime.Now.Day);
+                calendar.ViewEnd = DateTime.Now.AddDays(DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month) - DateTime.Now.Day);
+            }
+            if (ChangeModeComboBox.Text == "Неделя")
+            {
+                calendar.ViewStart = DateTime.Now.AddDays(1 - Convert.ToInt32(DateTime.Now.DayOfWeek));
+                calendar.ViewEnd = DateTime.Now.AddDays(+(7 - Convert.ToInt32(DateTime.Now.DayOfWeek)));   
+            }
+        }
+
+        private void calendarUpdate()
+        { 
+            SqlConnection cn = new SqlConnection();
+            try 
+            {
+                cn = DBDevite.DBOpen();
+              //  calendar.Items.Add(
+            }
+            catch (SqlException ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                DBDevite.DBClose(cn);
+            }   
         }
     }
 }
