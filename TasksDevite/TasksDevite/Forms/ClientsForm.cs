@@ -60,6 +60,7 @@ namespace TasksDevite
                                        days,
                                        claForm.TimeStartComboBox.Text,
                                        claForm.TimeEndComboBox.Text,
+                                       Convert.ToInt32(claForm.UserComboBox.SelectedValue),
                                        status, cn);
 
                 DBDevite.DBClose(cn);
@@ -77,7 +78,7 @@ namespace TasksDevite
                 string days;
                 int i = 6;
                 cn = DBDevite.DBOpen();
-                DataSet dt = ClientDAL.GetRecord(focused, cn);
+                DataSet dt = ClientDAL.GetFullRecord(focused, cn);
 
                 claForm.NameTextBox.Text = dt.Tables[0].Rows[0]["Name"].ToString();
                 claForm.AdressTextBox.Text = dt.Tables[0].Rows[0]["Adress"].ToString();
@@ -95,6 +96,7 @@ namespace TasksDevite
                 }
                 claForm.TimeStartComboBox.Text = dt.Tables[0].Rows[0]["TimeStart"].ToString();
                 claForm.TimeEndComboBox.Text = dt.Tables[0].Rows[0]["TimeEnd"].ToString();
+                claForm.UserComboBox.Text = dt.Tables[0].Rows[0]["Users"].ToString();
                 if (dt.Tables[0].Rows[0]["ClientStatus"].ToString() == "True") 
                     claForm.StatusComboBox.Text = "Да";
                 else
@@ -130,6 +132,7 @@ namespace TasksDevite
                                            days,
                                            claForm.TimeStartComboBox.Text,
                                            claForm.TimeEndComboBox.Text,
+                                           Convert.ToInt32(claForm.UserComboBox.SelectedValue),
                                            status, cn);
                     GridReload();
                 }
@@ -167,14 +170,16 @@ namespace TasksDevite
             {
                 cn = DBDevite.DBOpen();
 
-                SqlDataAdapter da = new SqlDataAdapter("select ID, Name as Название, " +
-                                                       "Phone as Телефон, "+
-                                                       "Adress as Адрес, " +
-                                                       "Days as Дни_недели, " +
-                                                       "TimeStart as Начало, " +
-                                                       "TimeEnd as Конец, " +
-                                                       "DateStart as Дата_начала_договора, "+
-                                                       "ClientStatus as Статус from clients", cn);
+                SqlDataAdapter da = new SqlDataAdapter("SELECT c.ID, c.Name as Название, " +
+                                                       "u.Users as Ответственный, " +
+                                                       "c.Phone as Телефон, "+
+                                                       "c.Adress as Адрес, " +
+                                                       "c.Days as Дни_недели, " +
+                                                       "c.TimeStart as Начало, " +
+                                                       "c.TimeEnd as Конец, " +
+                                                       "c.DateStart as Дата_начала_договора, " +
+                                                       "c.ClientStatus as Статус FROM clients c " +
+                                                       "LEFT JOIN users u ON c.userID = u.ID", cn);
                 SqlCommandBuilder cb = new SqlCommandBuilder(da);
                 DataSet ds = new DataSet();
                 da.Fill(ds);
