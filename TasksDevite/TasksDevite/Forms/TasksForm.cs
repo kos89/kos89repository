@@ -21,21 +21,10 @@ namespace TasksDevite
         }
 
         private void TasksForm_Load(object sender, EventArgs e)
-        {
-            GridReload(0);
+        {   
             calendar.ViewStart = DateTime.Now.AddDays( 1 - Convert.ToInt32(DateTime.Now.DayOfWeek));
             calendar.ViewEnd = DateTime.Now.AddDays( + (7 - Convert.ToInt32(DateTime.Now.DayOfWeek)));
-            
-            CalendarItem ci = new CalendarItem(calendar, DateTime.Now, DateTime.Now.AddDays(1), "fuck");
-            _items.Add(ci);
-                    
-            foreach (CalendarItem item in _items)
-            {
-                if (calendar.ViewIntersects(item))
-                {
-                    calendar.Items.Add(item);
-                }
-            }
+            GridReload(0);
         }
 
         private void GridReload(int id) //TODO ???
@@ -43,6 +32,7 @@ namespace TasksDevite
             SqlConnection cn = new SqlConnection();
             try
             {
+                //GridReload
                 cn = DBDevite.DBOpen();
 
                 SqlDataAdapter da = new SqlDataAdapter("SELECT t.ID, u.Users as Фамилия, c.Name as Клиент, t.Date as Дата, t.TimeStart as Начало, t.TimeEnd as Конец, t.TaskStatus as Статус " +
@@ -53,7 +43,58 @@ namespace TasksDevite
                 DataSet ds = new DataSet();
                 da.Fill(ds);
                 dataGridViewTask.DataSource = ds.Tables[0];
-                dataGridViewTask.Rows[id].Selected = true;
+               // dataGridViewTask.Rows[id].Selected = true;
+            }
+            catch (SqlException ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                DBDevite.DBClose(cn);
+            }
+            calendarReload();
+        }
+
+        private void calendarReload()
+        {
+            _items.Clear();
+            SqlConnection cn = new SqlConnection();
+            try
+            {
+                DateTime start, end;
+                CalendarItem ci;
+                cn = DBDevite.DBOpen();
+
+                //Task
+                SqlCommand command = new SqlCommand("SELECT u.Users, c.Name, t.Date, t.TimeStart, t.TimeEnd, t.TaskStatus " +
+                                                    "FROM tasks t " +
+                                                    "LEFT JOIN users u ON t.userID = u.ID " +
+                                                    "LEFT JOIN clients c ON t.clientID = c.ID " +
+                                                    "WHERE t.TaskStatus = 'true'", cn);
+                SqlDataReader reader = command.ExecuteReader();
+
+                while (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        start = Convert.ToDateTime(reader.GetDateTime(2).ToString("dd-MM-yyyy") + " " + reader.GetString(3).Trim() + ":00");
+                        end = Convert.ToDateTime(reader.GetDateTime(2).ToString("dd-MM-yyyy") + " " + reader.GetString(4).Trim() + ":00");
+                        //MessageBox.Show(reader.GetDateTime(2).ToString("dd-MM-yyyy") + " " + reader.GetString(3).Trim() + ":00");
+                        ci = new CalendarItem(calendar, start, end, reader.GetString(1) + "/" + reader.GetString(0));
+                        //MessageBox.Show(DateTime.Now.ToString() + " " + start.ToString());
+                        _items.Add(ci);
+                    }
+                    reader.NextResult();
+                }
+
+                foreach (CalendarItem item in _items)
+                {
+                    if (calendar.ViewIntersects(item))
+                    {
+                        calendar.Items.Add(item);
+                    }
+                }
             }
             catch (SqlException ex)
             {
@@ -178,36 +219,16 @@ namespace TasksDevite
 
         }
 
-        private void comboBox1_TextChanged(object sender, EventArgs e)
+        private void monthView1_SelectionChanged(object sender, EventArgs e)
         {
-            if (ChangeModeComboBox.Text == "Месяц")
-            {
-                calendar.ViewStart = DateTime.Now.AddDays(-DateTime.Now.Day);
-                calendar.ViewEnd = DateTime.Now.AddDays(DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month) - DateTime.Now.Day);
-            }
-            if (ChangeModeComboBox.Text == "Неделя")
-            {
-                calendar.ViewStart = DateTime.Now.AddDays(1 - Convert.ToInt32(DateTime.Now.DayOfWeek));
-                calendar.ViewEnd = DateTime.Now.AddDays(+(7 - Convert.ToInt32(DateTime.Now.DayOfWeek)));   
-            }
+            calendar.SetViewRange(monthView1.SelectionStart, monthView1.SelectionEnd);
+            calendarReload();
         }
 
-        private void calendarUpdate()
-        { 
-            SqlConnection cn = new SqlConnection();
-            try 
-            {
-                cn = DBDevite.DBOpen();
-              //  calendar.Items.Add(
-            }
-            catch (SqlException ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            finally
-            {
-                DBDevite.DBClose(cn);
-            }   
+        private void button2_Click(object sender, EventArgs e)
+        {
+            TaskMonthForm tmf = new TaskMonthForm();
+            tmf.ShowDialog();
         }
     }
 }
