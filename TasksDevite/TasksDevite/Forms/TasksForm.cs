@@ -228,7 +228,10 @@ namespace TasksDevite
         private void button2_Click(object sender, EventArgs e)
         {
             TaskMonthForm tmf = new TaskMonthForm();
-            tmf.ShowDialog();
+            if (tmf.ShowDialog() == DialogResult.OK)
+            { 
+                //пишем в базу
+            }
         }
     }
 }

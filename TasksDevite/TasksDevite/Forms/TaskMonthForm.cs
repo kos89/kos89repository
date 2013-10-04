@@ -18,6 +18,7 @@ namespace TasksDevite
         private void gridReload()
         {
             string days;
+            List<DateTime> dates;
             SqlConnection cn = new SqlConnection();
             try
             {
@@ -32,12 +33,18 @@ namespace TasksDevite
                 {
                     while (reader.Read())
                     {
-                        days = reader.GetString(2).Trim();
-                        for (int i = 0; i < 7; i++)
+                        days = reader.GetString(2).Trim(); //взять недельную строку 
+                        for (int i = 0; i < 7; i++)        //пройтись по строке
                         {
                             if (days[i] == '1')
-                                dataGridView.Rows.Add(true, reader.GetString(0), reader.GetString(1), reader.GetString(2), reader.GetString(3), reader.GetString(4));
-                                //MessageBox.Show("d");
+                            {
+                                dates = dateToDays(i + 1);   //получить даты daysOfWeek
+                                for (int j = 0; j < dates.Count; j++)  // пройтись по датам и добавить в грид
+                                {
+                                    dataGridView.Rows.Add(true, reader.GetString(0), reader.GetString(1), dates[j], reader.GetString(3), reader.GetString(4));                                    
+                                }
+                            }
+                            //MessageBox.Show("d");
                         }
                             //MessageBox.Show(days.Trim());
                             //dataGridView.Rows.Add(true, reader.GetString(0), reader.GetString(1), reader.GetString(2), reader.GetString(3), reader.GetString(4));
@@ -55,11 +62,19 @@ namespace TasksDevite
             }
         }
 
-        private List<DateTime> dateToDays(DateTime dt)
+        private List<DateTime> dateToDays(int day)
         {
-            List<DateTime>  dates = new List<DateTime>();
+            DateTime days;
+            List<DateTime> dates = new List<DateTime>();
 
-            return da;
+            for (int d = 1; d <= DateTime.DaysInMonth(DateTime.Today.Year, DateTime.Today.Month); d++)
+            {
+                days = Convert.ToDateTime(d.ToString() + "." + DateTime.Today.Month + "." + DateTime.Today.Year);
+
+                if ((int)days.DayOfWeek == (day == 7 ? 0 : day) )
+                    dates.Add(days);
+            }
+            return dates;
         }
     }
 }

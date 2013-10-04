@@ -35,6 +35,8 @@
             this.ColumnDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnStart = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnEnd = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.buttonOk = new System.Windows.Forms.Button();
+            this.buttonCncl = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -42,6 +44,9 @@
             // 
             this.dataGridView.AllowUserToAddRows = false;
             this.dataGridView.AllowUserToDeleteRows = false;
+            this.dataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -53,7 +58,7 @@
             this.ColumnEnd});
             this.dataGridView.Location = new System.Drawing.Point(12, 12);
             this.dataGridView.Name = "dataGridView";
-            this.dataGridView.Size = new System.Drawing.Size(878, 376);
+            this.dataGridView.Size = new System.Drawing.Size(884, 380);
             this.dataGridView.TabIndex = 0;
             // 
             // ColumnAdd
@@ -86,11 +91,33 @@
             this.ColumnEnd.HeaderText = "Конец";
             this.ColumnEnd.Name = "ColumnEnd";
             // 
+            // buttonOk
+            // 
+            this.buttonOk.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.buttonOk.Location = new System.Drawing.Point(632, 398);
+            this.buttonOk.Name = "buttonOk";
+            this.buttonOk.Size = new System.Drawing.Size(129, 23);
+            this.buttonOk.TabIndex = 1;
+            this.buttonOk.Text = "Подтвердить";
+            this.buttonOk.UseVisualStyleBackColor = true;
+            // 
+            // buttonCncl
+            // 
+            this.buttonCncl.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.buttonCncl.Location = new System.Drawing.Point(767, 398);
+            this.buttonCncl.Name = "buttonCncl";
+            this.buttonCncl.Size = new System.Drawing.Size(129, 23);
+            this.buttonCncl.TabIndex = 2;
+            this.buttonCncl.Text = "Отмена";
+            this.buttonCncl.UseVisualStyleBackColor = true;
+            // 
             // TaskMonthForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(902, 400);
+            this.ClientSize = new System.Drawing.Size(908, 433);
+            this.Controls.Add(this.buttonCncl);
+            this.Controls.Add(this.buttonOk);
             this.Controls.Add(this.dataGridView);
             this.Name = "TaskMonthForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -109,5 +136,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnDate;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnStart;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnEnd;
+        private System.Windows.Forms.Button buttonOk;
+        private System.Windows.Forms.Button buttonCncl;
     }
 }
