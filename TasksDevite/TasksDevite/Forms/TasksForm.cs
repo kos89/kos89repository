@@ -23,8 +23,8 @@ namespace TasksDevite
 
         private void TasksForm_Load(object sender, EventArgs e)
         {   
-            calendar.ViewStart = DateTime.Now.AddDays( 1 - Convert.ToInt32(DateTime.Now.DayOfWeek));
-            calendar.ViewEnd = DateTime.Now.AddDays( + (7 - Convert.ToInt32(DateTime.Now.DayOfWeek)));
+            //calendar.ViewStart = DateTime.Now.AddDays( 1 - Convert.ToInt32(DateTime.Now.DayOfWeek));
+            //calendar.ViewEnd = DateTime.Now.AddDays( + (7 - Convert.ToInt32(DateTime.Now.DayOfWeek)));
             GridReload(0);
         }
 
@@ -59,6 +59,7 @@ namespace TasksDevite
 
         private void calendarReload()
         {
+            calendar.SetViewRange(monthView1.SelectionStart, monthView1.SelectionEnd);
             _items.Clear();
             SqlConnection cn = new SqlConnection();
             try
@@ -132,56 +133,95 @@ namespace TasksDevite
 
         private void buttonDelete_Click(object sender, EventArgs e)
         {
-            DialogResult dialogResult = MessageBox.Show("Удалить запись?", "", MessageBoxButtons.YesNo);
-            if (dialogResult == DialogResult.Yes)
+            if (dataGridViewTask.RowCount != 0)
             {
-                SqlConnection cn = new SqlConnection();
-                cn = DBDevite.DBOpen();
+                DialogResult dialogResult = MessageBox.Show("Удалить запись?", "", MessageBoxButtons.YesNo);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    SqlConnection cn = new SqlConnection();
+                    cn = DBDevite.DBOpen();
 
-                TaskDAL.DeleteTask(Convert.ToInt32(dataGridViewTask[0, dataGridViewTask.CurrentRow.Index].Value), cn);
+                    TaskDAL.DeleteTask(Convert.ToInt32(dataGridViewTask[0, dataGridViewTask.CurrentRow.Index].Value), cn);
 
-                DBDevite.DBClose(cn);
-                GridReload(dataGridViewTask.RowCount - 2);
+                    DBDevite.DBClose(cn);
+                    GridReload(dataGridViewTask.RowCount - 2);
+                }
             }
         }
 
         private void buttonEdit_Click(object sender, EventArgs e)
         {
-            int focused = Convert.ToInt32(dataGridViewTask[0, dataGridViewTask.CurrentRow.Index].Value);
-            TaskAddForm taf = new TaskAddForm();
+            if (dataGridViewTask.RowCount != 0)
+            {
+                int focused = Convert.ToInt32(dataGridViewTask[0, dataGridViewTask.CurrentRow.Index].Value);
+                TaskAddForm taf = new TaskAddForm();
+                SqlConnection cn = new SqlConnection();
+                try
+                {
+                    cn = DBDevite.DBOpen();
+
+                    DataSet dt = TaskDAL.GetFullRecord(focused, cn);
+                    taf.UserСomboBox.Text = dt.Tables[0].Rows[0]["Users"].ToString();
+                    taf.ClientComboBox.Text = dt.Tables[0].Rows[0]["Name"].ToString();
+                    taf.DateTimePicker.Value = Convert.ToDateTime(dt.Tables[0].Rows[0]["Date"].ToString());
+                    if (dt.Tables[0].Rows[0]["TaskStatus"].ToString() == "True")
+                        taf.StatusComboBox.Text = "Открыт";
+                    else
+                        taf.StatusComboBox.Text = "Закрыт";
+                    taf.AboutRichTextBox.Text = dt.Tables[0].Rows[0]["About"].ToString();
+                    taf.TimeStartComboBox.Text = dt.Tables[0].Rows[0]["TimeStart"].ToString();
+                    taf.TimeEndComboBox.Text = dt.Tables[0].Rows[0]["TimeEnd"].ToString();
+
+                    if (taf.ShowDialog() == DialogResult.OK)
+                    {
+                        bool status;
+                        status = taf.StatusComboBox.Text == "Открыт";
+
+                        TaskDAL.UpdateTask(focused,
+                            Convert.ToInt32(taf.UserСomboBox.SelectedValue),
+                            Convert.ToInt32(taf.ClientComboBox.SelectedValue),
+                            taf.DateTimePicker.Value.Date,
+                            taf.TimeStartComboBox.Text,
+                            taf.TimeEndComboBox.Text,
+                            status,
+                            taf.AboutRichTextBox.Text, cn);
+
+                        GridReload(focused - 2);
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+                finally
+                {
+                    DBDevite.DBClose(cn);
+                }
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Service service = new Service("cl", "companyName-appName-1");
+            service.setUserCredentials("task@devite.ru", "jWH>45bY1");
+            EventEntry entry = new EventEntry();
+            DataSet ds = new DataSet();
+            When eventTimes = new When();
+            DateTime start, end;
+            AtomEntry insertedEntry;
+
             SqlConnection cn = new SqlConnection();
             try
             {
                 cn = DBDevite.DBOpen();
 
-                DataSet dt = TaskDAL.GetFullRecord(focused, cn);
-                taf.UserСomboBox.Text = dt.Tables[0].Rows[0]["Users"].ToString();
-                taf.ClientComboBox.Text = dt.Tables[0].Rows[0]["Name"].ToString();
-                taf.DateTimePicker.Value = Convert.ToDateTime(dt.Tables[0].Rows[0]["Date"].ToString());
-                if (dt.Tables[0].Rows[0]["TaskStatus"].ToString() == "True")
-                    taf.StatusComboBox.Text = "Открыт";
-                else
-                    taf.StatusComboBox.Text = "Закрыт";
-                taf.AboutRichTextBox.Text = dt.Tables[0].Rows[0]["About"].ToString();
-                taf.TimeStartComboBox.Text = dt.Tables[0].Rows[0]["TimeStart"].ToString();
-                taf.TimeEndComboBox.Text = dt.Tables[0].Rows[0]["TimeEnd"].ToString();
-
-                if (taf.ShowDialog() == DialogResult.OK)
-                {
-                    bool status;
-                    status = taf.StatusComboBox.Text == "Открыт";
-
-                    TaskDAL.UpdateTask(focused,
-                        Convert.ToInt32(taf.UserСomboBox.SelectedValue),
-                        Convert.ToInt32(taf.ClientComboBox.SelectedValue),
-                        taf.DateTimePicker.Value.Date,
-                        taf.TimeStartComboBox.Text,
-                        taf.TimeEndComboBox.Text,
-                        status, 
-                        taf.AboutRichTextBox.Text, cn);
-
-                    GridReload(focused - 2);
-                }
+                SqlDataAdapter da = new SqlDataAdapter("SELECT u.Users as userw, c.Name as client, t.Date as date, t.TimeStart as start, t.TimeEnd as endw, t.About as about, t.TaskStatus " +
+                                                       "FROM tasks t " +
+                                                       "LEFT JOIN users u ON t.userID = u.ID " + 
+                                                       "LEFT JOIN clients c ON t.clientID = c.ID " +
+                                                       "WHERE t.TaskStatus = 'true'", cn);
+                SqlCommandBuilder cb = new SqlCommandBuilder(da);
+                da.Fill(ds);
             }
             catch (SqlException ex)
             {
@@ -191,32 +231,23 @@ namespace TasksDevite
             {
                 DBDevite.DBClose(cn);
             }
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            Service service = new Service("cl", "companyName-appName-1");
-            service.setUserCredentials("task@devite.ru", "jWH>45bY1");
-
-            EventEntry entry = new EventEntry();
-            AtomPerson author = new AtomPerson(AtomPersonType.Author);
-            author.Name = "Kos";
-            author.Email = "task@devite.ru";
-            entry.Authors.Add(author);
-            entry.Title.Text = "Кирилл хуил";
-            entry.Content.Content = "Кирилл хуил!Кирилл хуил!";
-
-            When eventTimes = new When();
-            eventTimes.StartTime = DateTime.Parse("28/09/2013 12:00:00 PM");
-            eventTimes.EndTime = DateTime.Parse("28/09/2013 13:00:00 PM");
-            entry.Times.Add(eventTimes);
 
             Uri postUri = new Uri("http://www.google.com/calendar/feeds/task@devite.ru/private/full");
+            //запись в EventEntry
+            foreach(DataTable thisTable in ds.Tables)
+            {
+                foreach(DataRow row in thisTable.Rows)
+                {
+                    entry.Title.Text = row["client"].ToString() + "  " + row["userw"].ToString();
+                    entry.Content.Content = row["about"].ToString();
 
-            // Send the request and receive the response:
-            AtomEntry insertedEntry = service.Insert(postUri, entry);
-
-        }
+                    eventTimes.StartTime = Convert.ToDateTime(Convert.ToDateTime(row["date"].ToString()).ToString("dd-MM-yyyy") + " " + row["start"].ToString().Trim() + ":00");
+                    eventTimes.EndTime = Convert.ToDateTime(Convert.ToDateTime(row["date"].ToString()).ToString("dd-MM-yyyy") + " " + row["endw"].ToString().Trim() + ":00");
+                    entry.Times.Add(eventTimes);
+                    insertedEntry = service.Insert(postUri, entry);
+                }
+            }
+         }
 
         private void monthView1_SelectionChanged(object sender, EventArgs e)
         {
@@ -256,8 +287,7 @@ namespace TasksDevite
                 finally
                 {
                     DBDevite.DBClose(cn);
-                }
-               
+                } 
             }
         }
     }

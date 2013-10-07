@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Data.SqlClient;
 using DBHelper;
+using GlobalVars;
 
 namespace TasksDevite
 {
@@ -47,6 +48,30 @@ namespace TasksDevite
             {
                 DBDevite.DBClose(cn);
             }
+        }
+
+        private bool check()
+        {
+            if (GlobalVar.DctnrUsers.ContainsKey(UserСomboBox.Text) == false)
+                return false;
+            if (GlobalVar.DctnrClients.ContainsKey(ClientComboBox.Text) == false)
+                return false;
+
+            return true;
+        }
+        private void UserСomboBox_TextChanged(object sender, EventArgs e)
+        {
+            buttonOk.Enabled = check();
+        }
+
+        private void ClientComboBox_TextChanged(object sender, EventArgs e)
+        {
+            buttonOk.Enabled = check();
+        }
+
+        private void TaskAddForm_Load(object sender, EventArgs e)
+        {
+            buttonOk.Enabled = check();
         }
     }
 }

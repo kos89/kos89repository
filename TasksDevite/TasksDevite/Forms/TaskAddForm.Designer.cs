@@ -55,6 +55,7 @@
             this.UserСomboBox.Name = "UserСomboBox";
             this.UserСomboBox.Size = new System.Drawing.Size(217, 21);
             this.UserСomboBox.TabIndex = 0;
+            this.UserСomboBox.TextChanged += new System.EventHandler(this.UserСomboBox_TextChanged);
             // 
             // DateTimePicker
             // 
@@ -70,6 +71,7 @@
             this.ClientComboBox.Name = "ClientComboBox";
             this.ClientComboBox.Size = new System.Drawing.Size(217, 21);
             this.ClientComboBox.TabIndex = 2;
+            this.ClientComboBox.TextChanged += new System.EventHandler(this.ClientComboBox_TextChanged);
             // 
             // StatusComboBox
             // 
@@ -255,6 +257,7 @@
             this.Name = "TaskAddForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "TaskAddForm";
+            this.Load += new System.EventHandler(this.TaskAddForm_Load);
             this.TimeGroupBox.ResumeLayout(false);
             this.TimeGroupBox.PerformLayout();
             this.ResumeLayout(false);
