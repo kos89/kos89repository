@@ -26,7 +26,8 @@ namespace TasksDevite
 
                 SqlCommand command = new SqlCommand("SELECT u.Users, c.Name, c.Days, c.TimeStart, c.TimeEnd, c.ClientStatus " +
                                                     "FROM clients c " +
-                                                    "LEFT JOIN users u ON c.userID = u.ID", cn);
+                                                    "LEFT JOIN users u ON c.userID = u.ID " +
+                                                    "WHERE c.ClientStatus = 'TRUE'", cn);
                 SqlDataReader reader = command.ExecuteReader();
 
                 while (reader.HasRows)
@@ -41,13 +42,10 @@ namespace TasksDevite
                                 dates = dateToDays(i + 1);   //получить даты daysOfWeek
                                 for (int j = 0; j < dates.Count; j++)  // пройтись по датам и добавить в грид
                                 {
-                                    dataGridView.Rows.Add(true, reader.GetString(0), reader.GetString(1), dates[j], reader.GetString(3), reader.GetString(4));                                    
+                                    dataGridView.Rows.Add(true, reader.GetString(0), reader.GetString(1), dates[j].ToShortDateString(), reader.GetString(3), reader.GetString(4));                                    
                                 }
                             }
-                            //MessageBox.Show("d");
                         }
-                            //MessageBox.Show(days.Trim());
-                            //dataGridView.Rows.Add(true, reader.GetString(0), reader.GetString(1), reader.GetString(2), reader.GetString(3), reader.GetString(4));
                     }
                     reader.NextResult();
                 }

@@ -7,6 +7,6 @@ namespace TasksDevite
 {
     class FunctionHelper
     {
-        //public static string ComboBoxsToString()
+        
     }
 }

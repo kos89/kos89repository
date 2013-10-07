@@ -8,6 +8,7 @@ using Google.GData.Client;
 using Google.GData.Extensions;
 using System.Windows.Forms.Calendar;
 using System.Collections.Generic;
+using GlobalVars;
 
 namespace TasksDevite
 {
@@ -80,9 +81,7 @@ namespace TasksDevite
                     {
                         start = Convert.ToDateTime(reader.GetDateTime(2).ToString("dd-MM-yyyy") + " " + reader.GetString(3).Trim() + ":00");
                         end = Convert.ToDateTime(reader.GetDateTime(2).ToString("dd-MM-yyyy") + " " + reader.GetString(4).Trim() + ":00");
-                        //MessageBox.Show(reader.GetDateTime(2).ToString("dd-MM-yyyy") + " " + reader.GetString(3).Trim() + ":00");
                         ci = new CalendarItem(calendar, start, end, reader.GetString(1) + "/" + reader.GetString(0));
-                        //MessageBox.Show(DateTime.Now.ToString() + " " + start.ToString());
                         _items.Add(ci);
                     }
                     reader.NextResult();
@@ -230,7 +229,35 @@ namespace TasksDevite
             TaskMonthForm tmf = new TaskMonthForm();
             if (tmf.ShowDialog() == DialogResult.OK)
             { 
-                //пишем в базу
+                SqlConnection cn = new SqlConnection();
+                try
+                {
+                    cn = DBDevite.DBOpen();
+
+                    for(int i = 0; i < tmf.dataGridView.RowCount; i++)
+                    {
+                        if (tmf.dataGridView.Rows[i].Cells[tmf.ColumnAdd.Index].Value.ToString() == "True")
+                            TaskDAL.InsertTask(TaskDAL.GetID(cn),
+                                                GlobalVar.DctnrUsers[tmf.dataGridView.Rows[i].Cells[tmf.ColumnUser.Index].Value.ToString()],
+                                                GlobalVar.DctnrClients[tmf.dataGridView.Rows[i].Cells[tmf.ColumnClient.Index].Value.ToString()],
+                                                Convert.ToDateTime(tmf.dataGridView.Rows[i].Cells[tmf.ColumnDate.Index].Value),
+                                                tmf.dataGridView.Rows[i].Cells[tmf.ColumnStart.Index].Value.ToString(),
+                                                tmf.dataGridView.Rows[i].Cells[tmf.ColumnEnd.Index].Value.ToString(),
+                                                true, "", cn);
+                    }
+
+                    GridReload(0);
+                    calendarReload();
+                }
+                catch (SqlException ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+                finally
+                {
+                    DBDevite.DBClose(cn);
+                }
+               
             }
         }
     }

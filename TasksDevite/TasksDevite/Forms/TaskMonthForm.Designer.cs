@@ -129,13 +129,13 @@
 
         #endregion
 
-        private System.Windows.Forms.DataGridView dataGridView;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn ColumnAdd;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnUser;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnClient;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnDate;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnStart;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnEnd;
+        public System.Windows.Forms.DataGridView dataGridView;
+        public System.Windows.Forms.DataGridViewCheckBoxColumn ColumnAdd;
+        public System.Windows.Forms.DataGridViewTextBoxColumn ColumnUser;
+        public System.Windows.Forms.DataGridViewTextBoxColumn ColumnClient;
+        public System.Windows.Forms.DataGridViewTextBoxColumn ColumnDate;
+        public System.Windows.Forms.DataGridViewTextBoxColumn ColumnStart;
+        public System.Windows.Forms.DataGridViewTextBoxColumn ColumnEnd;
         private System.Windows.Forms.Button buttonOk;
         private System.Windows.Forms.Button buttonCncl;
     }

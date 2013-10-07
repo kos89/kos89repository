@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using DBHelper;
 using System.Data.SqlClient;
+using GlobalVars;
 
 namespace TasksDevite
 {
@@ -64,6 +60,8 @@ namespace TasksDevite
                                        status, cn);
 
                 DBDevite.DBClose(cn);
+
+                GlobalVar.DictionaryClientsReload();
                 GridReload();
             }
         }
@@ -134,6 +132,8 @@ namespace TasksDevite
                                            claForm.TimeEndComboBox.Text,
                                            Convert.ToInt32(claForm.UserComboBox.SelectedValue),
                                            status, cn);
+
+                    GlobalVar.DictionaryClientsReload();
                     GridReload();
                 }
             }
@@ -159,6 +159,8 @@ namespace TasksDevite
                 ClientDAL.DeleteClient(Convert.ToInt32(dataGridViewClients[0,dataGridViewClients.CurrentRow.Index].Value), cn);
                 
                 DBDevite.DBClose(cn);
+
+                GlobalVar.DictionaryClientsReload();
                 GridReload();
             }
         }

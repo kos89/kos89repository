@@ -1,15 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Data.Linq;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using System.Data.Common;
-using System.Configuration;
 using System.Data.SqlClient;
+using GlobalVars;
 using DBHelper;
 
 namespace TasksDevite
@@ -62,7 +55,7 @@ namespace TasksDevite
                 }
             }            
         }
-
+        
         private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
@@ -75,6 +68,10 @@ namespace TasksDevite
                 entForm.Close();
             else
                 Application.Exit();
+
+            //формирование списков
+            GlobalVar.DictionaryUsersReload();
+            GlobalVar.DictionaryClientsReload();
         }
 
         private void button2_Click(object sender, EventArgs e)
