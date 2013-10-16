@@ -22,13 +22,17 @@ namespace TasksDevite
         }
 
         private void TasksForm_Load(object sender, EventArgs e)
-        {   
+        {
+            // TODO: данная строка кода позволяет загрузить данные в таблицу "dataSetDevite.Tasks". При необходимости она может быть перемещена или удалена.
+            this.tasksTableAdapter.Fill(this.dataSetDevite.Tasks);
+            // TODO: данная строка кода позволяет загрузить данные в таблицу "dataSetDevite1.Clients". При необходимости она может быть перемещена или удалена.
+            // TODO: данная строка кода позволяет загрузить данные в таблицу "dataSetDevite1.Users". При необходимости она может быть перемещена или удалена.
             //calendar.ViewStart = DateTime.Now.AddDays( 1 - Convert.ToInt32(DateTime.Now.DayOfWeek));
             //calendar.ViewEnd = DateTime.Now.AddDays( + (7 - Convert.ToInt32(DateTime.Now.DayOfWeek)));
-            GridReload(0);
+            //GridReload(0);
         }
 
-        private void GridReload(int id) //TODO ???
+    /*    private void GridReload(int id) //TODO ???
         {
             SqlConnection cn = new SqlConnection();
             try
@@ -104,7 +108,7 @@ namespace TasksDevite
             {
                 DBDevite.DBClose(cn);
             }
-        }
+        }*/
 
         private void buttonAdd_Click(object sender, EventArgs e)
         {
@@ -127,7 +131,10 @@ namespace TasksDevite
                                    taf.AboutRichTextBox.Text, cn);
 
                 DBDevite.DBClose(cn);
-                GridReload(dataGridViewTask.RowCount);
+
+                this.dataSetDevite.Reset();
+                this.tasksTableAdapter.Fill(this.dataSetDevite.Tasks);
+                //GridReload(dataGridViewTask.RowCount);
             }
         }
 
@@ -144,7 +151,8 @@ namespace TasksDevite
                     TaskDAL.DeleteTask(Convert.ToInt32(dataGridViewTask[0, dataGridViewTask.CurrentRow.Index].Value), cn);
 
                     DBDevite.DBClose(cn);
-                    GridReload(dataGridViewTask.RowCount - 2);
+                    this.tasksTableAdapter.Fill(this.dataSetDevite.Tasks);
+                    //GridReload(dataGridViewTask.RowCount - 2);
                 }
             }
         }
@@ -186,7 +194,8 @@ namespace TasksDevite
                             status,
                             taf.AboutRichTextBox.Text, cn);
 
-                        GridReload(focused - 2);
+                        this.tasksTableAdapter.Fill(this.dataSetDevite.Tasks);
+                       // GridReload(focused - 2);
                     }
                 }
                 catch (SqlException ex)
@@ -207,7 +216,6 @@ namespace TasksDevite
             EventEntry entry = new EventEntry();
             DataSet ds = new DataSet();
             When eventTimes = new When();
-            DateTime start, end;
             AtomEntry insertedEntry;
 
             SqlConnection cn = new SqlConnection();
@@ -252,7 +260,7 @@ namespace TasksDevite
         private void monthView1_SelectionChanged(object sender, EventArgs e)
         {
             calendar.SetViewRange(monthView1.SelectionStart, monthView1.SelectionEnd);
-            calendarReload();
+            //calendarReload();
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -277,8 +285,9 @@ namespace TasksDevite
                                                 true, "", cn);
                     }
 
-                    GridReload(0);
-                    calendarReload();
+                    this.tasksTableAdapter.Fill(this.dataSetDevite.Tasks);
+                    //GridReload(0);
+                    //calendarReload();
                 }
                 catch (SqlException ex)
                 {

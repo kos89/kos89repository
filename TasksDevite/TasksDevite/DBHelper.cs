@@ -13,9 +13,9 @@ namespace DBHelper
         {
             SqlConnectionStringBuilder connect = new SqlConnectionStringBuilder();
             connect.InitialCatalog = "test";
-            //connect.DataSource = @"(local)\SQLEXPRESS";
-            connect.DataSource = @"(local)";
-            connect.AttachDBFilename = @"C:\Program Files\Microsoft SQL Server\MSSQL10.SQLEXPRESS\MSSQL\DATA\test.mdf";
+            connect.DataSource = @"(local)\SQLEXPRESS";
+            //connect.DataSource = @"(local)";
+            connect.AttachDBFilename = @"C:\kos89repository\TasksDevite\TasksDevite\test.mdf";
             connect.ConnectTimeout = 30;
             connect.IntegratedSecurity = true;
             SqlConnection cn = new SqlConnection();
