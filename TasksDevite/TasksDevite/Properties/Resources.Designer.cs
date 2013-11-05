@@ -88,6 +88,13 @@ namespace TasksDevite.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap kuser_8291 {
+            get {
+                object obj = ResourceManager.GetObject("kuser_8291", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap phone_6363 {
             get {
                 object obj = ResourceManager.GetObject("phone_6363", resourceCulture);

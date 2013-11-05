@@ -21,7 +21,9 @@ namespace TasksDevite
 
         private void Entres_Load(object sender, EventArgs e)
         {
-            SqlConnection cn = new SqlConnection();
+            // TODO: данная строка кода позволяет загрузить данные в таблицу "dataSetDevite.Users". При необходимости она может быть перемещена или удалена.
+            this.usersTableAdapter.Fill(this.dataSetDevite.Users);
+            /*SqlConnection cn = new SqlConnection();
             try
             {
                 cn = DBDevite.DBOpen();
@@ -42,7 +44,7 @@ namespace TasksDevite
             finally
             {
                 DBDevite.DBClose(cn);
-            }
+            }*/
         }
 
         private void buttonOk_Click(object sender, EventArgs e)

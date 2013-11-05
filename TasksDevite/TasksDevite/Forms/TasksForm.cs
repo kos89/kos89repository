@@ -23,27 +23,48 @@ namespace TasksDevite
 
         private void TasksForm_Load(object sender, EventArgs e)
         {
-            // TODO: данная строка кода позволяет загрузить данные в таблицу "dataSetDevite.Tasks". При необходимости она может быть перемещена или удалена.
-            this.tasksTableAdapter.Fill(this.dataSetDevite.Tasks);
-            // TODO: данная строка кода позволяет загрузить данные в таблицу "dataSetDevite1.Clients". При необходимости она может быть перемещена или удалена.
-            // TODO: данная строка кода позволяет загрузить данные в таблицу "dataSetDevite1.Users". При необходимости она может быть перемещена или удалена.
-            //calendar.ViewStart = DateTime.Now.AddDays( 1 - Convert.ToInt32(DateTime.Now.DayOfWeek));
-            //calendar.ViewEnd = DateTime.Now.AddDays( + (7 - Convert.ToInt32(DateTime.Now.DayOfWeek)));
-            //GridReload(0);
+            EntresForm entForm = new EntresForm();
+            if (entForm.ShowDialog() == DialogResult.OK)
+                entForm.Close();
+            else
+                Application.Exit();
+
+            //формирование списков
+            GlobalVar.DictionaryUsersReload();
+            GlobalVar.DictionaryClientsReload();
+
+            //this.tasksTableAdapter.Fill(this.dataSetDevite.Tasks);
+            calendar.ViewStart = DateTime.Now.AddDays( 1 - Convert.ToInt32(DateTime.Now.DayOfWeek));
+            calendar.ViewEnd = DateTime.Now.AddDays( + (7 - Convert.ToInt32(DateTime.Now.DayOfWeek)));
+            GridReload(-1,-1);
         }
 
-    /*    private void GridReload(int id) //TODO ???
+        private void GridReload(int ticket, int user)
         {
+            string sql = "SELECT t.ID, u.Users as Фамилия, c.Name as Клиент, t.Date as Дата, t.TimeStart as Начало, t.TimeEnd as Конец, t.TaskStatus as Статус " +
+                         "FROM tasks t " +
+                         "LEFT JOIN users u ON t.userID = u.ID " + 
+                         "LEFT JOIN clients c ON t.clientID = c.ID";
+            if (ticket != -1)
+            {
+                switch (ticket)
+                {
+                    case 1: sql += " WHERE t.TaskStatus = 'true'";  break;
+                    case 2: sql += " WHERE t.TaskStatus = 'false'"; break;
+                }
+            }
+
+            if (user != -1)
+            {
+                sql += string.Format("AND u.Users = '{0}'", user); 
+            }
             SqlConnection cn = new SqlConnection();
             try
             {
                 //GridReload
                 cn = DBDevite.DBOpen();
 
-                SqlDataAdapter da = new SqlDataAdapter("SELECT t.ID, u.Users as Фамилия, c.Name as Клиент, t.Date as Дата, t.TimeStart as Начало, t.TimeEnd as Конец, t.TaskStatus as Статус " +
-                                                       "FROM tasks t " +
-                                                       "LEFT JOIN users u ON t.userID = u.ID " + 
-                                                       "LEFT JOIN clients c ON t.clientID = c.ID", cn);
+                SqlDataAdapter da = new SqlDataAdapter(sql, cn);
                 SqlCommandBuilder cb = new SqlCommandBuilder(da);
                 DataSet ds = new DataSet();
                 da.Fill(ds);
@@ -108,9 +129,9 @@ namespace TasksDevite
             {
                 DBDevite.DBClose(cn);
             }
-        }*/
+        }
 
-        private void buttonAdd_Click(object sender, EventArgs e)
+        void AddButton()
         {
             TaskAddForm taf = new TaskAddForm();
             if (taf.ShowDialog() == DialogResult.OK)
@@ -120,11 +141,11 @@ namespace TasksDevite
 
                 SqlConnection cn = new SqlConnection();
                 cn = DBDevite.DBOpen();
-                
+
                 TaskDAL.InsertTask(TaskDAL.GetID(cn),
-                                   Convert.ToInt32(taf.UserСomboBox.SelectedValue), 
-                                   Convert.ToInt32(taf.ClientComboBox.SelectedValue), 
-                                   taf.DateTimePicker.Value.Date, 
+                                   Convert.ToInt32(taf.UserСomboBox.SelectedValue),
+                                   Convert.ToInt32(taf.ClientComboBox.SelectedValue),
+                                   taf.DateTimePicker.Value.Date,
                                    taf.TimeStartComboBox.Text,
                                    taf.TimeEndComboBox.Text,
                                    status,
@@ -132,13 +153,19 @@ namespace TasksDevite
 
                 DBDevite.DBClose(cn);
 
-                this.dataSetDevite.Reset();
-                this.tasksTableAdapter.Fill(this.dataSetDevite.Tasks);
-                //GridReload(dataGridViewTask.RowCount);
+                //this.dataSetDevite.Reset();
+                //this.tasksTableAdapter.Fill(this.dataSetDevite.Tasks);
+                //this.dataGridViewTask.Update();
+                GridReload(-1, -1);
             }
         }
 
-        private void buttonDelete_Click(object sender, EventArgs e)
+        private void buttonAdd_Click(object sender, EventArgs e)
+        {
+            AddButton();
+        }
+
+        void DeleteButton()
         {
             if (dataGridViewTask.RowCount != 0)
             {
@@ -151,10 +178,15 @@ namespace TasksDevite
                     TaskDAL.DeleteTask(Convert.ToInt32(dataGridViewTask[0, dataGridViewTask.CurrentRow.Index].Value), cn);
 
                     DBDevite.DBClose(cn);
-                    this.tasksTableAdapter.Fill(this.dataSetDevite.Tasks);
-                    //GridReload(dataGridViewTask.RowCount - 2);
+                    //this.tasksTableAdapter.Fill(this.dataSetDevite.Tasks);
+                    GridReload(-1, -1);
                 }
             }
+        }
+
+        private void buttonDelete_Click(object sender, EventArgs e)
+        {
+            DeleteButton();
         }
 
         private void buttonEdit_Click(object sender, EventArgs e)
@@ -194,8 +226,8 @@ namespace TasksDevite
                             status,
                             taf.AboutRichTextBox.Text, cn);
 
-                        this.tasksTableAdapter.Fill(this.dataSetDevite.Tasks);
-                       // GridReload(focused - 2);
+                       // this.tasksTableAdapter.Fill(this.dataSetDevite.Tasks);
+                        GridReload(-1,-1);
                     }
                 }
                 catch (SqlException ex)
@@ -260,7 +292,7 @@ namespace TasksDevite
         private void monthView1_SelectionChanged(object sender, EventArgs e)
         {
             calendar.SetViewRange(monthView1.SelectionStart, monthView1.SelectionEnd);
-            //calendarReload();
+            calendarReload();
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -285,9 +317,9 @@ namespace TasksDevite
                                                 true, "", cn);
                     }
 
-                    this.tasksTableAdapter.Fill(this.dataSetDevite.Tasks);
-                    //GridReload(0);
-                    //calendarReload();
+                    //this.tasksTableAdapter.Fill(this.dataSetDevite.Tasks);
+                    GridReload(-1,-1);
+                    calendarReload();
                 }
                 catch (SqlException ex)
                 {
@@ -299,5 +331,26 @@ namespace TasksDevite
                 } 
             }
         }
+
+        private void statusComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            GridReload(statusComboBox.SelectedIndex, -1);
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            ClientsForm clForm = new ClientsForm();
+            clForm.ShowDialog();
+        }
+
+        private void TasksForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode.ToString())
+            {
+                case "Delete": DeleteButton(); break;
+                case "Insert": AddButton(); break;
+            }
+        }
+
     }
 }
